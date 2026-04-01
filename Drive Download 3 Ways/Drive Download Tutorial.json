@@ -1,0 +1,503 @@
+{
+  "name": "Drive Download Tutorial",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -3984,
+        -1152
+      ],
+      "id": "b4b2d1bb-cfec-4359-868c-77829e0c2220",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "1uD9w7WOxcHpLvwwQgWoV91Ffv2iNIz8A",
+          "mode": "list",
+          "cachedResultName": "Follow My Accounts😇 .txt",
+          "cachedResultUrl": "https://drive.google.com/file/d/1uD9w7WOxcHpLvwwQgWoV91Ffv2iNIz8A/view?usp=drivesdk"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        -3936,
+        -2096
+      ],
+      "id": "b26e7cbe-e62a-480a-9a12-3b5b33b14e02",
+      "name": "1️⃣ Download file",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "z3NnZZOfAjDpoGJ8",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "fileFolder",
+        "filter": {},
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        -3936,
+        -1904
+      ],
+      "id": "c86009d7-c900-4fde-9544-676edfe3f603",
+      "name": "2️⃣ Search files and folders",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "z3NnZZOfAjDpoGJ8",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Loop over input items and add a new field called 'myNewField' to the JSON of each one\nfor (const item of $input.all()) {\n  item.json.myNewField = 1;\n}\n\nreturn $input.all();"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -3936,
+        -1712
+      ],
+      "id": "7f289a8f-68cc-4383-acad-601daedd0281",
+      "name": "3️⃣ Code / Function"
+    },
+    {
+      "parameters": {
+        "content": "\n\n# 3 Main Ways To Download Files From Your Drive \n## Extracting Files To Your Workflow  \n",
+        "height": 1680,
+        "width": 1328,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -4080,
+        -2352
+      ],
+      "id": "6ee0dd21-b5d4-43bb-912b-70762bab8048",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "\n# Nodes",
+        "height": 656,
+        "width": 1264
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -4048,
+        -2192
+      ],
+      "id": "f9f6edf1-d982-4199-800f-c5c6b9590e08",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "\n# Download A File",
+        "height": 224,
+        "width": 368
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -3760,
+        -1456
+      ],
+      "id": "d1eecd75-35d0-4c2d-8680-ac1ca67e8f4d",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "\n# Download Selected Files",
+        "height": 224,
+        "width": 704,
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -3760,
+        -1216
+      ],
+      "id": "a3ff9ab5-db96-4dac-bf66-d40944616759",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "content": "\n# Download All Files",
+        "height": 240,
+        "width": 928,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -3760,
+        -976
+      ],
+      "id": "027e9e3a-5ea3-4861-b830-5e4671473a54",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "content": "## The Download File node is used to fetch and store files (from a URL, API response, or binary input) into n8n’s data stream so they can be used later in the workflow.",
+        "height": 128,
+        "width": 832,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -3728,
+        -2096
+      ],
+      "id": "50eb0b07-a727-42ab-8154-cabd670488dd",
+      "name": "Sticky Note6"
+    },
+    {
+      "parameters": {
+        "content": "## The Search Files and Folders node is used to look up files/folders stored in a connected service (e.g., Google Drive, Dropbox, OneDrive).",
+        "height": 128,
+        "width": 832,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -3728,
+        -1904
+      ],
+      "id": "be09683b-22ca-4fb7-b04f-a4b5373c5870",
+      "name": "Sticky Note7"
+    },
+    {
+      "parameters": {
+        "content": "## The Code node lets you run custom JavaScript logic directly inside a workflow. It’s the most flexible node in n8n.",
+        "height": 128,
+        "width": 832,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -3728,
+        -1728
+      ],
+      "id": "150fac41-78e3-4b6f-8282-3409d3f0af0c",
+      "name": "Sticky Note8"
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "1uD9w7WOxcHpLvwwQgWoV91Ffv2iNIz8A",
+          "mode": "list",
+          "cachedResultName": "Follow My Accounts😇 .txt",
+          "cachedResultUrl": "https://drive.google.com/file/d/1uD9w7WOxcHpLvwwQgWoV91Ffv2iNIz8A/view?usp=drivesdk"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        -3680,
+        -1392
+      ],
+      "id": "d698f7ef-9383-4db6-b4dd-8255dd6c0b69",
+      "name": "1 Download Files",
+      "notesInFlow": true,
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "z3NnZZOfAjDpoGJ8",
+          "name": "Google Drive account"
+        }
+      },
+      "notes": "Selected Files From Folder"
+    },
+    {
+      "parameters": {
+        "resource": "fileFolder",
+        "searchMethod": "query",
+        "queryString": "name contains 'Support Midknight Automation 🥲'\nor name contains 'Support Midknight Coding 🥲'\nor name contains 'Support Midknight Discovery 🥲'\nor name contains 'Support Midknight Gaming 🥲'",
+        "filter": {},
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        -3680,
+        -1152
+      ],
+      "id": "3c3408d2-746b-4ef6-a060-e7673da633d3",
+      "name": "2 Search files and folders",
+      "notesInFlow": true,
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "z3NnZZOfAjDpoGJ8",
+          "name": "Google Drive account"
+        }
+      },
+      "notes": "Selected File From Folder\n"
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $json.id }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        -3472,
+        -1152
+      ],
+      "id": "e7440434-f236-4371-9df0-ca0c10f616e7",
+      "name": "2 Download Files",
+      "notesInFlow": true,
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "z3NnZZOfAjDpoGJ8",
+          "name": "Google Drive account"
+        }
+      },
+      "notes": "Selected Files From Folder"
+    },
+    {
+      "parameters": {
+        "jsCode": "// n8n Code node (JavaScript)\n// Rename binary property \"data\" to \"data1\", \"data2\", ...\n\nreturn $input.all().map((item, index) => {\n  const out = { json: item.json, binary: {} };\n\n  for (const key in item.binary) {\n    if (key === \"data\") {\n      out.binary[`data${index + 1}`] = item.binary[key];\n    } else {\n      out.binary[key] = item.binary[key];\n    }\n  }\n\n  return out;\n});\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -3264,
+        -1152
+      ],
+      "id": "b2b07f2d-5f19-4050-b6f1-fe53b8dcc653",
+      "name": "2 Code / Function",
+      "notesInFlow": true,
+      "notes": "Rename Data Output Field"
+    },
+    {
+      "parameters": {
+        "resource": "fileFolder",
+        "queryString": "Text Folder",
+        "returnAll": true,
+        "filter": {},
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        -3680,
+        -912
+      ],
+      "id": "c422a9ca-4c70-4d03-ba1f-e6449f8c0b28",
+      "name": "3 Search files and folders",
+      "notesInFlow": true,
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "z3NnZZOfAjDpoGJ8",
+          "name": "Google Drive account"
+        }
+      },
+      "notes": "Get Folder Id"
+    },
+    {
+      "parameters": {
+        "resource": "fileFolder",
+        "searchMethod": "query",
+        "queryString": "='{{ $json.id }}' in parents",
+        "returnAll": true,
+        "filter": {},
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        -3472,
+        -912
+      ],
+      "id": "18dee766-142a-46e1-86c4-dfcfdd89565e",
+      "name": "3 Search files and folders (1)",
+      "notesInFlow": true,
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "z3NnZZOfAjDpoGJ8",
+          "name": "Google Drive account"
+        }
+      },
+      "notes": "Select all File From Folder\n"
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $json.id }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        -3264,
+        -912
+      ],
+      "id": "21ecff7f-3fd2-44cc-8abf-e2a88742168e",
+      "name": "3 Download Files",
+      "notesInFlow": true,
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "z3NnZZOfAjDpoGJ8",
+          "name": "Google Drive account"
+        }
+      },
+      "notes": "Selected Files From Folder"
+    },
+    {
+      "parameters": {
+        "jsCode": "// n8n Code node (JavaScript)\n// Rename binary property \"data\" to \"data1\", \"data2\", ...\n\nreturn $input.all().map((item, index) => {\n  const out = { json: item.json, binary: {} };\n\n  for (const key in item.binary) {\n    if (key === \"data\") {\n      out.binary[`data${index + 1}`] = item.binary[key];\n    } else {\n      out.binary[key] = item.binary[key];\n    }\n  }\n\n  return out;\n});\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -3056,
+        -912
+      ],
+      "id": "3254c142-bd01-4358-93ba-7e8c121cb0de",
+      "name": "3 Code / Function",
+      "notesInFlow": true,
+      "notes": "Rename Data Output Field"
+    },
+    {
+      "parameters": {
+        "content": "\n# Sample",
+        "height": 800,
+        "width": 1264,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -4048,
+        -1504
+      ],
+      "id": "313a1937-5937-43a7-b6db-8d89ff6a61b8",
+      "name": "Sticky Note5"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "1 Download Files",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "2 Search files and folders",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "3 Search files and folders",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "1 Download Files": {
+      "main": [
+        []
+      ]
+    },
+    "2 Search files and folders": {
+      "main": [
+        [
+          {
+            "node": "2 Download Files",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "2 Download Files": {
+      "main": [
+        [
+          {
+            "node": "2 Code / Function",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "3 Search files and folders": {
+      "main": [
+        [
+          {
+            "node": "3 Search files and folders (1)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "3 Search files and folders (1)": {
+      "main": [
+        [
+          {
+            "node": "3 Download Files",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "3 Download Files": {
+      "main": [
+        [
+          {
+            "node": "3 Code / Function",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "1c636559-4b04-45cb-bc18-b4e865755cda",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "a3b96ecce66c34acc113f9eec63f47ca627f695f8598a977cf984773aef4af6c"
+  },
+  "id": "VwEA8s0vBlrfrwKn",
+  "tags": []
+}
