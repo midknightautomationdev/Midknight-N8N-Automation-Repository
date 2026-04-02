@@ -1,0 +1,561 @@
+{
+  "name": "How to Make A Persistent Counter",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -800,
+        -64
+      ],
+      "id": "f2531327-a797-4226-b8ed-19df8dd43506",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "content": "# Download & Extract\n## Counter.txt Value",
+        "height": 272,
+        "width": 352,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -592,
+        -176
+      ],
+      "id": "fbab3722-b456-4c95-bd49-03a70f5d95ac",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "# Change Value Of\n## Counter2.txt ",
+        "height": 272,
+        "width": 320,
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -208,
+        -176
+      ],
+      "id": "32757697-5fb4-4c50-a84b-e7f69246f220",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "# Convert New Value\n## to a Textfile",
+        "height": 272,
+        "width": 352,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        128,
+        -176
+      ],
+      "id": "9c1abbbf-adc2-4efa-907d-94b5f8c0c720",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "# Update the new Value\n## Counter2.txt",
+        "height": 272,
+        "width": 384,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        496,
+        -176
+      ],
+      "id": "1e2e169b-ac80-40ba-874b-5bca78be28de",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "content": "# Download & Extract\n## New Counter2.txt Value",
+        "height": 272,
+        "width": 384,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        912,
+        -176
+      ],
+      "id": "dafa22a8-c269-4c66-b98c-9ddc4e635b16",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "content": "\n\n# How To Make a Persistent Counter\n## By using Poor Man's Database\n",
+        "height": 1056,
+        "width": 1984,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -640,
+        -896
+      ],
+      "id": "f525c026-0157-40eb-ac6b-fdce97caade6",
+      "name": "Sticky Note5"
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "1cwTxfpuaDfGxSgUDG29KHx7vjgNJ8-yb",
+          "mode": "list",
+          "cachedResultName": "Count2",
+          "cachedResultUrl": "https://drive.google.com/file/d/1cwTxfpuaDfGxSgUDG29KHx7vjgNJ8-yb/view?usp=drivesdk"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        -544,
+        -64
+      ],
+      "id": "b1f056fe-9512-4fb2-bd77-c0585eaccc31",
+      "name": "1 Download File",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "z3NnZZOfAjDpoGJ8",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "text",
+        "destinationKey": "data1",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [
+        -384,
+        -64
+      ],
+      "id": "94e0e62f-be16-4edb-b89c-095e71ce69bd",
+      "name": "1 Extract From File"
+    },
+    {
+      "parameters": {
+        "jsCode": "// get current counter from JSON and convert to number\nlet counter = parseInt($input.first().json.data1);  // ensures it's a number\n\n// increment\ncounter += 1\n\n// reset to 0 if it goes above 7\nif (counter === 8) counter = 1;\n\n// return updated counter\nreturn [{ json: { counter } }];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -112,
+        -64
+      ],
+      "id": "5740b94a-dace-4520-bbca-5409d4332fc7",
+      "name": "1 Code"
+    },
+    {
+      "parameters": {
+        "operation": "toText",
+        "sourceProperty": "counter",
+        "binaryPropertyName": "=data",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        240,
+        -64
+      ],
+      "id": "1c8f1b1a-d30e-4ed5-8ea6-242928507e7b",
+      "name": "1 Convert To File"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "fileId": {
+          "__rl": true,
+          "value": "1cwTxfpuaDfGxSgUDG29KHx7vjgNJ8-yb",
+          "mode": "list",
+          "cachedResultName": "Count2",
+          "cachedResultUrl": "https://drive.google.com/file/d/1cwTxfpuaDfGxSgUDG29KHx7vjgNJ8-yb/view?usp=drivesdk"
+        },
+        "changeFileContent": true,
+        "newUpdatedFileName": "Count2",
+        "options": {
+          "useContentAsIndexableText": false
+        }
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        640,
+        -64
+      ],
+      "id": "06707af0-d727-4c8b-853b-7142bb731f3b",
+      "name": "1 Update File",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "z3NnZZOfAjDpoGJ8",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "1cwTxfpuaDfGxSgUDG29KHx7vjgNJ8-yb",
+          "mode": "list",
+          "cachedResultName": "Count2",
+          "cachedResultUrl": "https://drive.google.com/file/d/1cwTxfpuaDfGxSgUDG29KHx7vjgNJ8-yb/view?usp=drivesdk"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        976,
+        -64
+      ],
+      "id": "ca3a09d2-b83d-43f2-872e-bda72325174e",
+      "name": "2 Download File",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "z3NnZZOfAjDpoGJ8",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "text",
+        "binaryPropertyName": "=data",
+        "destinationKey": "data1",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [
+        1136,
+        -64
+      ],
+      "id": "61e24bc2-ee33-42b0-b18f-63517e45f5d0",
+      "name": "2 Extract From File"
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "1cwTxfpuaDfGxSgUDG29KHx7vjgNJ8-yb",
+          "mode": "list",
+          "cachedResultName": "Count2",
+          "cachedResultUrl": "https://drive.google.com/file/d/1cwTxfpuaDfGxSgUDG29KHx7vjgNJ8-yb/view?usp=drivesdk"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        -560,
+        -656
+      ],
+      "id": "b26829c7-b177-49f6-a3c0-89b858277230",
+      "name": "1️⃣ Download File",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "z3NnZZOfAjDpoGJ8",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "fileId": {
+          "__rl": true,
+          "value": "1cwTxfpuaDfGxSgUDG29KHx7vjgNJ8-yb",
+          "mode": "list",
+          "cachedResultName": "Count2",
+          "cachedResultUrl": "https://drive.google.com/file/d/1cwTxfpuaDfGxSgUDG29KHx7vjgNJ8-yb/view?usp=drivesdk"
+        },
+        "changeFileContent": true,
+        "newUpdatedFileName": "Count2",
+        "options": {
+          "useContentAsIndexableText": false
+        }
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        -560,
+        -432
+      ],
+      "id": "8797f251-cbcd-43eb-bd64-00958eaa17b3",
+      "name": "2️⃣ Update File",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "z3NnZZOfAjDpoGJ8",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "toText",
+        "sourceProperty": "counter",
+        "binaryPropertyName": "=data",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        112,
+        -656
+      ],
+      "id": "cff567ab-775d-4dcd-98ba-d17b92fef8ef",
+      "name": "3️⃣ Convert To File"
+    },
+    {
+      "parameters": {
+        "operation": "text",
+        "binaryPropertyName": "=data",
+        "destinationKey": "data1",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [
+        112,
+        -432
+      ],
+      "id": "65ad0300-bfe0-4039-b383-79e7c142e781",
+      "name": "4️⃣ Extract From File"
+    },
+    {
+      "parameters": {
+        "jsCode": "// get current counter from JSON and convert to number\nlet counter = parseInt($input.first().json.data1);  // ensures it's a number\n\n// increment\ncounter += 1\n\n// reset to 0 if it goes above 7\nif (counter === 8) counter = 1;\n\n// return updated counter\nreturn [{ json: { counter } }];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        800,
+        -656
+      ],
+      "id": "eb1eebcf-cb45-4e27-9fb7-2e12d42118ce",
+      "name": "1 Code1"
+    },
+    {
+      "parameters": {
+        "content": "## The Code node lets you run custom JavaScript logic directly inside a workflow. It’s the most flexible node in n8n.",
+        "height": 208,
+        "width": 288,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        976,
+        -704
+      ],
+      "id": "715b59df-4a22-4901-b852-0174277d6c93",
+      "name": "Sticky Note8"
+    },
+    {
+      "parameters": {
+        "content": "## The Download File node is used to fetch and store files (from a URL, API response, or binary input) into n8n’s data stream so they can be used later in the workflow.",
+        "height": 208,
+        "width": 432,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -384,
+        -704
+      ],
+      "id": "18919627-50cd-46b1-bd37-41330723c1f4",
+      "name": "Sticky Note6"
+    },
+    {
+      "parameters": {
+        "content": "## This node lets you change an existing file stored in Google Drive. You pick which file (by its ID or path) and then supply new content, or metadata (like name) to overwrite or update it.",
+        "height": 208,
+        "width": 432,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -384,
+        -480
+      ],
+      "id": "32a0384a-6781-46c2-bd59-7bf177a4d43e",
+      "name": "Sticky Note7"
+    },
+    {
+      "parameters": {
+        "content": "## This node transforms structured data (typically JSON, or tabular data in n8n) into a file format (e.g. CSV, XLSX, JSON file) as binary content.",
+        "height": 208,
+        "width": 464,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        288,
+        -704
+      ],
+      "id": "31b72d12-a2af-4d0f-a7b2-aa38fbe55ce1",
+      "name": "Sticky Note9"
+    },
+    {
+      "parameters": {
+        "content": "## This node does the reverse of “Convert to File” in some sense: it reads a binary file (e.g. a PDF, Excel, or other supported format) and extracts its internal structure or data into JSON items your workflow can manipulate.",
+        "height": 208,
+        "width": 464,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        288,
+        -480
+      ],
+      "id": "45a3b16e-0cc8-4644-b2bd-7bff33a0782b",
+      "name": "Sticky Note10"
+    },
+    {
+      "parameters": {
+        "content": "",
+        "height": 496,
+        "width": 1952
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -624,
+        -736
+      ],
+      "id": "30affe2b-6171-4b85-8943-cc79971819a8",
+      "name": "Sticky Note11"
+    },
+    {
+      "parameters": {
+        "content": "",
+        "height": 336,
+        "width": 1952,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -624,
+        -208
+      ],
+      "id": "af43c66d-81e2-4fa1-80a1-49e70141a318",
+      "name": "Sticky Note12"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "1 Download File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "1 Download File": {
+      "main": [
+        [
+          {
+            "node": "1 Extract From File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "1 Extract From File": {
+      "main": [
+        [
+          {
+            "node": "1 Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "1 Code": {
+      "main": [
+        [
+          {
+            "node": "1 Convert To File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "1 Convert To File": {
+      "main": [
+        [
+          {
+            "node": "1 Update File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "1 Update File": {
+      "main": [
+        [
+          {
+            "node": "2 Download File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "2 Download File": {
+      "main": [
+        [
+          {
+            "node": "2 Extract From File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "744d248a-3407-40fb-a198-16b605a6c30c",
+  "meta": {
+    "instanceId": "a3b96ecce66c34acc113f9eec63f47ca627f695f8598a977cf984773aef4af6c"
+  },
+  "id": "xuYnJtSJyYlWycF2",
+  "tags": []
+}
