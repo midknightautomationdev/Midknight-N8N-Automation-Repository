@@ -1,0 +1,1798 @@
+{
+  "name": "Email Format Verification",
+  "nodes": [
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "Email"
+            },
+            {
+              "name": "Name"
+            },
+            {
+              "name": "SenderId"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -1536,
+        -80
+      ],
+      "id": "0cd0fd9d-011a-41c8-9fb2-5e200c8ebe35",
+      "name": "When Executed by Another Workflow"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "600fffc6-e3e8-46a5-af6f-e5f04d117ab9",
+              "name": "Result",
+              "value": "=The email {{ $json.email }} is an {{ $json.reason }}",
+              "type": "string"
+            },
+            {
+              "id": "b41e3cbf-740d-45ca-b689-eb7491906759",
+              "name": "Validation Code",
+              "value": "Not Applicable",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -1008,
+        64
+      ],
+      "id": "ac4c6d1b-1fda-4ebe-9df8-4cb358b110ec",
+      "name": "Invalid Email Format"
+    },
+    {
+      "parameters": {
+        "jsCode": "function generateRandomString(length = 20) {\n  const chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';\n  let result = '';\n  for (let i = 0; i < length; i++) {\n    result += chars.charAt(Math.floor(Math.random() * chars.length));\n  }\n  return result;\n}\n\n// Prefix that always appears at the start\nconst prefix = '<YOUR_PREFIX_HERE>';\n\n// Generate token with prefix\nconst token = prefix + generateRandomString(20); // You can change 20 to increase/decrease randomness length\n\n// Get data from previous nodes\nconst senderId = $('When Executed by Another Workflow').first().json.SenderId;\nconst email = $('Email Verification').first().json.email;\nconst name = $('Email Verification').first().json.Name;\n\nreturn [\n  {\n    json: {\n      token,\n      senderId,\n      email,\n      name\n    }\n  }\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1008,
+        -224
+      ],
+      "id": "6eb70bd1-e63d-4ebc-93a7-07de781698cd",
+      "name": "Verification Code"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Example input (replace or map dynamically)\nconst email = $input.first().json[\"Email\"];\nconst Name = $input.first().json[\"Name\"];\nconst SenderId = $input.first().json[\"Sender Id\"];\n\n// 1️⃣ Basic email format regex (generic)\nconst regex = /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/;\n\n// Check if the email is formatted correctly\nif (!regex.test(email)) {\n  return [{\n    SenderId,\n    Name,\n    email,\n    valid: false,\n    reason: \"Invalid email format\"\n  }];\n}\n\n// 2️⃣ Extract domain\nconst domain = email.split(\"@\")[1];\n\n// 3️⃣ Check if it's a Gmail address (auto valid)\nif (domain.toLowerCase() === \"gmail.com\") {\n  return [{\n    SenderId,\n    Name,\n    email,\n    valid: true,\n    reason: \"Valid Gmail address\"\n  }];\n}\n\n// 4️⃣ For custom domains: verify MX records using Google DNS API\nconst url = `https://dns.google/resolve?name=${domain}&type=MX`;\n\nasync function httpGet(url) {\n  const options = {\n    method: \"GET\",\n    url: url,\n  };\n  return await this.helpers.httpRequest(options);\n}\n\ntry {\n  const data = await httpGet.call(this, url);\n\n  if (data.Answer && data.Answer.length > 0) {\n    return [{\n      SenderId,\n      Name,\n      email,\n      valid: true,\n      reason: \"Valid business email (domain has MX records)\"\n    }];\n  } else {\n    return [{\n      SenderId,\n      Name,\n      email,\n      valid: false,\n      reason: \"Invalid domain (no MX records found)\"\n    }];\n  }\n} catch (err) {\n  return [{\n    SenderId,\n    Name,\n    email,\n    valid: false,\n    reason: \"Lookup failed: \" + err.message\n  }];\n}\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1376,
+        -80
+      ],
+      "id": "6fe88141-f8fd-4bc4-b678-3d066d52ebba",
+      "name": "Email Verification"
+    },
+    {
+      "parameters": {
+        "operation": "rowExists",
+        "dataTableId": {
+          "__rl": true,
+          "value": "<Table Id>",
+          "mode": "list",
+          "cachedResultName": "Gmail Authentication",
+          "cachedResultUrl": "/projects/<Your Project ID>/datatables/<Table Id>"
+        },
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "SenderId",
+              "keyValue": "={{ $json.senderId }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1,
+      "position": [
+        -832,
+        -416
+      ],
+      "id": "6f25d229-5db5-4261-9784-b64fb1dd0d0d",
+      "name": "If row exists",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "dataTableId": {
+          "__rl": true,
+          "value": "<Table Id>",
+          "mode": "list",
+          "cachedResultName": "Gmail Authentication",
+          "cachedResultUrl": "/projects/<Your Project ID>/datatables/<Table Id>"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "SenderId": "={{ $('When Executed by Another Workflow').item.json.SenderId }}",
+            "Full_Name": "={{ $('Verification Code').item.json.name }}",
+            "Email": "={{ $('Verification Code').item.json.email }}",
+            "Authentication_token": "={{ $('Verification Code').item.json.token }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "SenderId",
+              "displayName": "SenderId",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Full_Name",
+              "displayName": "Full_Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Authentication_token",
+              "displayName": "Authentication_token",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1,
+      "position": [
+        -640,
+        224
+      ],
+      "id": "33a8da66-9682-4fee-8125-85f753fdcc10",
+      "name": "Insert row"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "dataTableId": {
+          "__rl": true,
+          "value": "<Table Id>",
+          "mode": "list",
+          "cachedResultName": "Gmail Authentication",
+          "cachedResultUrl": "/projects/<Your Project ID>/datatables/<Table Id>"
+        },
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "SenderId",
+              "keyValue": "={{ $('When Executed by Another Workflow').item.json.SenderId }}"
+            }
+          ]
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Full_Name": "={{ $('Verification Code').item.json.name }}",
+            "Authentication_token": "={{ $('Verification Code').item.json.token }}",
+            "Email": "={{ $('Verification Code').item.json.email }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "SenderId",
+              "displayName": "SenderId",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Full_Name",
+              "displayName": "Full_Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Authentication_token",
+              "displayName": "Authentication_token",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1,
+      "position": [
+        -640,
+        -128
+      ],
+      "id": "b2f38435-9f04-4fd6-ae12-2d375bda8b1d",
+      "name": "Update row(s)"
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('Verification Code').item.json.email }}",
+        "subject": "Just checking in 👋 – Is this your email?",
+        "emailType": "text",
+        "message": "=Hi There, {{ $('When Executed by Another Workflow').item.json.Name }}\n\nWe’re just sending a quick hello from Midknight Automation Agency! ✨\n\nTHIS IS YOUR UNIQUE VALIDATION CODE:↩️\n📌 {{ $json.Authentication_token }}\n👆🏻COPY AND PASTE THIS AS A REPLY👆🏻\n\nThis is a validation email to make sure we can reach you at this address. In the future, we’ll be sending you updates, tips, and information about our automation services.\n\nWhile you’re here, feel free to check out and subscribe to our YouTube channels for coding, gaming, and creative content:\n\nMidknight Coding    \n  (https://www.youtube.com/@MidknightCodingYt)\nMidknight Gaming  \n  (https://www.youtube.com/@MidknightGamingYT)\nMidknight Discovery \n  (https://www.youtube.com/@MidknightDiscoveryYt)\nThe Beauty Gallery  \n  (https://www.youtube.com/@TheBeautyGalleryYt)\nSongs of Stories \n  (https://www.youtube.com/@SongsOfStoriesOfficial)\n\n🔍 Again this is a validation email, so please respond\nUSING THIS VALIDATION CODE:↩️\n📌 {{ $json.Authentication_token }} \n\nThanks for being here, and we look forward to connecting soon!\nWarm regards,\n\nMidknight Automation Agency ✨ ",
+        "options": {
+          "replyTo": ""
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        -480,
+        -128
+      ],
+      "id": "e44652b1-5f61-4375-af7b-889212116d1e",
+      "name": "Send a message1",
+      "webhookId": "15ae0ce7-090f-440d-a635-f4aec828f2f2",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "nlQF0yG166gTU6al",
+          "name": "Gmail account"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://graph.facebook.com/v24.0/<Your Facebook Page Id>/messages ",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "facebookGraphApi",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"recipient\": {\n    \"id\": \"{{ $('When Executed by Another Workflow').item.json.SenderId }}\"\n  },\n  \"messaging_type\": \"RESPONSE\",\n  \"message\": {\n    \"text\": \"✅Analyzing Your Email Format Processing; please standby...\"\n  }\n}\n ",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -1200,
+        -336
+      ],
+      "id": "7362d061-6292-4e41-b0eb-f1c45432de5b",
+      "name": "Confirm Email Format",
+      "credentials": {
+        "facebookGraphApi": {
+          "id": "nO4zRv3ulIF7RWVI",
+          "name": "MDA FB PAGE"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://graph.facebook.com/v24.0/<Your Facebook Page Id>/messages ",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "facebookGraphApi",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"recipient\": {\n    \"id\": \"{{ $json.senderId }}\"\n  },\n  \"messaging_type\": \"RESPONSE\",\n  \"message\": {\n    \"text\": \"✅Verification Code Generated Sending email Request; please standby...\"\n  }\n}\n ",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -832,
+        -656
+      ],
+      "id": "38a48713-495d-4b65-877e-2983be7bd2de",
+      "name": "Confirm Verification Code Generation",
+      "credentials": {
+        "facebookGraphApi": {
+          "id": "nO4zRv3ulIF7RWVI",
+          "name": "MDA FB PAGE"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://graph.facebook.com/v24.0/<Your Facebook Page Id>/messages ",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "facebookGraphApi",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"recipient\": {\n    \"id\": \"{{ $('Verification Code').item.json.senderId }}\"\n  },\n  \"messaging_type\": \"RESPONSE\",\n  \"message\": {\n    \"text\": \"✅Email Verification Sent, Sending verification Code in message...,\"\n  }\n}\n ",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -48,
+        -416
+      ],
+      "id": "96e9471a-d7a1-4a12-b72e-93fbb9851510",
+      "name": "Sending Verification Code Confirmation",
+      "credentials": {
+        "facebookGraphApi": {
+          "id": "nO4zRv3ulIF7RWVI",
+          "name": "MDA FB PAGE"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "65960558-d5bd-4b63-86b9-6a7d55b7ecdc",
+              "leftValue": "={{ $json.valid }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -1200,
+        -80
+      ],
+      "id": "35ef2c6d-2f0e-4177-94db-3f0dd9352933",
+      "name": "If Valid"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "1f2b9f38-03d8-4248-89ec-38420a8abfac",
+              "leftValue": "={{ $json.token }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "exists",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "63065013-c057-4220-8db0-5cacac22d365",
+              "leftValue": "={{ $json.senderId }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "exists",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "b80bd6ba-2c14-425b-9359-624054cac403",
+              "leftValue": "={{ $json.email }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "exists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -640,
+        -416
+      ],
+      "id": "fdad9372-9799-4f5d-9cdc-57acc69916d3",
+      "name": "If result exist"
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('Verification Code').item.json.email }}",
+        "subject": "Just checking in 👋 – Is this your email?",
+        "emailType": "text",
+        "message": "=Hi There, {{ $('When Executed by Another Workflow').item.json.Name }}\n\nWe’re just sending a quick hello from Midknight Automation Agency! ✨\n\nTHIS IS YOUR UNIQUE VALIDATION CODE:↩️\n📌 {{ $json.Authentication_token }}\n👆🏻COPY AND PASTE THIS AS A REPLY👆🏻\n\nThis is a validation email to make sure we can reach you at this address. In the future, we’ll be sending you updates, tips, and information about our automation services.\n\nWhile you’re here, feel free to check out and subscribe to our YouTube channels for coding, gaming, and creative content:\n\nMidknight Coding    \n  (https://www.youtube.com/@MidknightCodingYt)\nMidknight Gaming  \n  (https://www.youtube.com/@MidknightGamingYT)\nMidknight Discovery \n  (https://www.youtube.com/@MidknightDiscoveryYt)\nThe Beauty Gallery  \n  (https://www.youtube.com/@TheBeautyGalleryYt)\nSongs of Stories \n  (https://www.youtube.com/@SongsOfStoriesOfficial)\n\n🔍 Again this is a validation email, so please respond\nUSING THIS VALIDATION CODE:↩️\n📌 {{ $json.Authentication_token }} \n\nThanks for being here, and we look forward to connecting soon!\nWarm regards,\n\nMidknight Automation Agency ✨ ",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        -480,
+        224
+      ],
+      "id": "1847abf6-5afc-443d-8b8b-c8fc77a72be8",
+      "name": "Send a message2",
+      "webhookId": "15ae0ce7-090f-440d-a635-f4aec828f2f2",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "nlQF0yG166gTU6al",
+          "name": "Gmail account"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "<Your Spreadsheet Id>",
+          "mode": "list",
+          "cachedResultName": "CSR AGENT DATABASE",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/<Your Spreadsheet Id>/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 939932668,
+          "mode": "list",
+          "cachedResultName": "Sender Information",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/<Your Spreadsheet Id>/edit#gid=939932668"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Sender Id": "={{ $('When Executed by Another Workflow').item.json.SenderId }}",
+            "Email Status": "Invalid",
+            "Email": "={{ $('Verification Code').item.json.email }}"
+          },
+          "matchingColumns": [
+            "Sender Id"
+          ],
+          "schema": [
+            {
+              "id": "Sender Id",
+              "displayName": "Sender Id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "First Name",
+              "displayName": "First Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Middle Name",
+              "displayName": "Middle Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Last Name",
+              "displayName": "Last Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Suffix",
+              "displayName": "Suffix",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Contact No.",
+              "displayName": "Contact No.",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Email Status",
+              "displayName": "Email Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Address",
+              "displayName": "Address",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Discovery Meeting Id",
+              "displayName": "Discovery Meeting Id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Discovery Meeting Link",
+              "displayName": "Discovery Meeting Link",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Meeting Time And Date",
+              "displayName": "Meeting Time And Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Client Status",
+              "displayName": "Client Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -48,
+        -64
+      ],
+      "id": "e0ea77d6-1f09-4841-b7d6-88a15dcb303b",
+      "name": "Update Unverified1",
+      "retryOnFail": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "6Ut71cphPkhg1Wje",
+          "name": "Google Sheets account"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "<Your Spreadsheet Id>",
+          "mode": "list",
+          "cachedResultName": "CSR AGENT DATABASE",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/<Your Spreadsheet Id>/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 939932668,
+          "mode": "list",
+          "cachedResultName": "Sender Information",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/<Your Spreadsheet Id>/edit#gid=939932668"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Sender Id": "={{ $('When Executed by Another Workflow').item.json.SenderId }}",
+            "Email Status": "Verified",
+            "Email": "={{ $('Verification Code').item.json.email }}"
+          },
+          "matchingColumns": [
+            "Sender Id"
+          ],
+          "schema": [
+            {
+              "id": "Sender Id",
+              "displayName": "Sender Id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "First Name",
+              "displayName": "First Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Middle Name",
+              "displayName": "Middle Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Last Name",
+              "displayName": "Last Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Suffix",
+              "displayName": "Suffix",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Contact No.",
+              "displayName": "Contact No.",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Email Status",
+              "displayName": "Email Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Address",
+              "displayName": "Address",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Discovery Meeting Id",
+              "displayName": "Discovery Meeting Id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Discovery Meeting Link",
+              "displayName": "Discovery Meeting Link",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Meeting Time And Date",
+              "displayName": "Meeting Time And Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Client Status",
+              "displayName": "Client Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -48,
+        -224
+      ],
+      "id": "f76ca6b4-7b8e-406b-aa53-8f36d64118de",
+      "name": "Update Verified1",
+      "retryOnFail": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "6Ut71cphPkhg1Wje",
+          "name": "Google Sheets account"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "<Your Spreadsheet Id>",
+          "mode": "list",
+          "cachedResultName": "CSR AGENT DATABASE",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/<Your Spreadsheet Id>/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 939932668,
+          "mode": "list",
+          "cachedResultName": "Sender Information",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/<Your Spreadsheet Id>/edit#gid=939932668"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Sender Id": "={{ $('When Executed by Another Workflow').item.json.SenderId }}",
+            "Email Status": "Verified",
+            "Email": "={{ $('Verification Code').item.json.email }}"
+          },
+          "matchingColumns": [
+            "Sender Id"
+          ],
+          "schema": [
+            {
+              "id": "Sender Id",
+              "displayName": "Sender Id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "First Name",
+              "displayName": "First Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Middle Name",
+              "displayName": "Middle Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Last Name",
+              "displayName": "Last Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Suffix",
+              "displayName": "Suffix",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Contact No.",
+              "displayName": "Contact No.",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Email Status",
+              "displayName": "Email Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Address",
+              "displayName": "Address",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Discovery Meeting Id",
+              "displayName": "Discovery Meeting Id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Discovery Meeting Link",
+              "displayName": "Discovery Meeting Link",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Meeting Time And Date",
+              "displayName": "Meeting Time And Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Client Status",
+              "displayName": "Client Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -48,
+        160
+      ],
+      "id": "7a4a79c5-8727-416d-8417-402f18586292",
+      "name": "Update Verified2",
+      "retryOnFail": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "6Ut71cphPkhg1Wje",
+          "name": "Google Sheets account"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "<Your Spreadsheet Id>",
+          "mode": "list",
+          "cachedResultName": "CSR AGENT DATABASE",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/<Your Spreadsheet Id>/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 939932668,
+          "mode": "list",
+          "cachedResultName": "Sender Information",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/<Your Spreadsheet Id>/edit#gid=939932668"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Sender Id": "={{ $('When Executed by Another Workflow').item.json.SenderId }}",
+            "Email Status": "Invalid"
+          },
+          "matchingColumns": [
+            "Sender Id"
+          ],
+          "schema": [
+            {
+              "id": "Sender Id",
+              "displayName": "Sender Id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "First Name",
+              "displayName": "First Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Middle Name",
+              "displayName": "Middle Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Last Name",
+              "displayName": "Last Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Suffix",
+              "displayName": "Suffix",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Contact No.",
+              "displayName": "Contact No.",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Email Status",
+              "displayName": "Email Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Address",
+              "displayName": "Address",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Discovery Meeting Id",
+              "displayName": "Discovery Meeting Id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Discovery Meeting Link",
+              "displayName": "Discovery Meeting Link",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Meeting Time And Date",
+              "displayName": "Meeting Time And Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Client Status",
+              "displayName": "Client Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -1008,
+        224
+      ],
+      "id": "f4da3f64-e8b3-4a24-9483-a900aef746e9",
+      "name": "Update Unverified",
+      "retryOnFail": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "6Ut71cphPkhg1Wje",
+          "name": "Google Sheets account"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "<Your Spreadsheet Id>",
+          "mode": "list",
+          "cachedResultName": "CSR AGENT DATABASE",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/<Your Spreadsheet Id>/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 939932668,
+          "mode": "list",
+          "cachedResultName": "Sender Information",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/<Your Spreadsheet Id>/edit#gid=939932668"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Sender Id": "={{ $('When Executed by Another Workflow').item.json.SenderId }}",
+            "Email Status": "invalid",
+            "Email": "={{ $('Verification Code').item.json.email }}"
+          },
+          "matchingColumns": [
+            "Sender Id"
+          ],
+          "schema": [
+            {
+              "id": "Sender Id",
+              "displayName": "Sender Id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "First Name",
+              "displayName": "First Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Middle Name",
+              "displayName": "Middle Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Last Name",
+              "displayName": "Last Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Suffix",
+              "displayName": "Suffix",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Contact No.",
+              "displayName": "Contact No.",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Email Status",
+              "displayName": "Email Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Address",
+              "displayName": "Address",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Discovery Meeting Id",
+              "displayName": "Discovery Meeting Id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Discovery Meeting Link",
+              "displayName": "Discovery Meeting Link",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Meeting Time And Date",
+              "displayName": "Meeting Time And Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Client Status",
+              "displayName": "Client Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -48,
+        320
+      ],
+      "id": "c450aeb7-e3a8-41af-800f-8ff80a6edc4b",
+      "name": "Update Unverified2",
+      "retryOnFail": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "6Ut71cphPkhg1Wje",
+          "name": "Google Sheets account"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "600fffc6-e3e8-46a5-af6f-e5f04d117ab9",
+              "name": "Result",
+              "value": "=The email {{ $('Verification Code').item.json.email }} is in right format confirm it exist by replying to the verification code sent to your email",
+              "type": "string"
+            },
+            {
+              "id": "50bb9fbf-c44a-49e0-a5f0-212f4a457d9d",
+              "name": "Validation Code",
+              "value": "={{ $('Update row(s)').item.json.Authentication_token }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        128,
+        -224
+      ],
+      "id": "711bb5db-749c-46fb-a5ee-cf9b4ea7deb6",
+      "name": "Valid Email1"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "600fffc6-e3e8-46a5-af6f-e5f04d117ab9",
+              "name": "Result",
+              "value": "=The email {{ $('Verification Code').item.json.email }} is in right format confirm it exist by replying to the verification code sent to your email",
+              "type": "string"
+            },
+            {
+              "id": "dc3883b9-1e2e-45b6-8463-317e96b56a72",
+              "name": "Validation Code",
+              "value": "={{ $('Insert row').item.json.Authentication_token }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        128,
+        160
+      ],
+      "id": "4cbb8186-e1bb-4b5f-8644-3e0551e2a87c",
+      "name": "Valid Email2"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "600fffc6-e3e8-46a5-af6f-e5f04d117ab9",
+              "name": "Result",
+              "value": "=The email {{ $('Verification Code').item.json.email }} does not exist",
+              "type": "string"
+            },
+            {
+              "id": "d79f3202-8f09-4ca6-91bb-5b0d8b2fb065",
+              "name": "Validation Code",
+              "value": "Not Applicable",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        128,
+        -64
+      ],
+      "id": "ec03281b-6ba9-411a-9150-f8082dc39730",
+      "name": "Non-existing email1"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "600fffc6-e3e8-46a5-af6f-e5f04d117ab9",
+              "name": "Result",
+              "value": "=The email {{ $('Verification Code').item.json.email }} does not exist",
+              "type": "string"
+            },
+            {
+              "id": "d79f3202-8f09-4ca6-91bb-5b0d8b2fb065",
+              "name": "Validation Code",
+              "value": "Not Applicable",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        128,
+        320
+      ],
+      "id": "ac0ad0a6-a948-49e0-85cf-29656c71c805",
+      "name": "Non-existing email2"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "Email Verification",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Invalid Email Format": {
+      "main": [
+        []
+      ]
+    },
+    "Verification Code": {
+      "main": [
+        [
+          {
+            "node": "If row exists",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Confirm Verification Code Generation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Email Verification": {
+      "main": [
+        [
+          {
+            "node": "If Valid",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Confirm Email Format",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If row exists": {
+      "main": [
+        [
+          {
+            "node": "If result exist",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Insert row": {
+      "main": [
+        [
+          {
+            "node": "Send a message2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update row(s)": {
+      "main": [
+        [
+          {
+            "node": "Send a message1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a message1": {
+      "main": [
+        [
+          {
+            "node": "Sending Verification Code Confirmation",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Update Verified1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Update Unverified1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If Valid": {
+      "main": [
+        [
+          {
+            "node": "Verification Code",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Invalid Email Format",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Update Unverified",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If result exist": {
+      "main": [
+        [
+          {
+            "node": "Update row(s)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Insert row",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a message2": {
+      "main": [
+        [
+          {
+            "node": "Sending Verification Code Confirmation",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Update Verified2",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Update Unverified2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Unverified1": {
+      "main": [
+        [
+          {
+            "node": "Non-existing email1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Verified1": {
+      "main": [
+        [
+          {
+            "node": "Valid Email1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Verified2": {
+      "main": [
+        [
+          {
+            "node": "Valid Email2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Unverified2": {
+      "main": [
+        [
+          {
+            "node": "Non-existing email2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Valid Email1": {
+      "main": [
+        []
+      ]
+    },
+    "Non-existing email1": {
+      "main": [
+        []
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "fe3d8084-a1a2-49bd-bd90-6add102fb17f",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "a3b96ecce66c34acc113f9eec63f47ca627f695f8598a977cf984773aef4af6c"
+  },
+  "id": "DI8qemyLv4RMea69",
+  "tags": []
+}

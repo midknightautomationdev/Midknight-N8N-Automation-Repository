@@ -1,0 +1,1562 @@
+{
+  "name": "Change Email",
+  "nodes": [
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "Sender_Id"
+            },
+            {
+              "name": "New_Email"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -576,
+        -128
+      ],
+      "id": "8296dac1-38bc-402c-97e4-3c69ba12ac74",
+      "name": "When Executed by Another Workflow"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "84460e4a-c23b-4794-ac3c-415fbf43e4d6",
+              "leftValue": "={{ $json.New_Email }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -368,
+        -128
+      ],
+      "id": "e2b266e7-5b88-47db-b699-330b0e83039f",
+      "name": "If New Email Provided"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1QDG7yr9DbeY2R5zVXR2zuYzOhXNRbjLmHHG4E3q-IcM",
+          "mode": "list",
+          "cachedResultName": "CSR AGENT DATABASE",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1QDG7yr9DbeY2R5zVXR2zuYzOhXNRbjLmHHG4E3q-IcM/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 939932668,
+          "mode": "list",
+          "cachedResultName": "Sender Information",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1QDG7yr9DbeY2R5zVXR2zuYzOhXNRbjLmHHG4E3q-IcM/edit#gid=939932668"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "Sender Id",
+              "lookupValue": "={{ $json.Sender_Id }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -96,
+        -352
+      ],
+      "id": "7ffddc42-d603-455e-835b-175aafecc88a",
+      "name": "Get row(s) in sheet1",
+      "retryOnFail": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "6Ut71cphPkhg1Wje",
+          "name": "Google Sheets account"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "operation": "delete",
+        "calendar": {
+          "__rl": true,
+          "value": "c1ce6208a6e893c79c999f4ed15cd60dcbb4d08646db92b95999855235ccb70a@group.calendar.google.com",
+          "mode": "list",
+          "cachedResultName": "Midknight Automation Client Meeting "
+        },
+        "eventId": "={{ $json['Discovery Meeting Id'] }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleCalendar",
+      "typeVersion": 1.3,
+      "position": [
+        128,
+        -368
+      ],
+      "id": "0f12fcbb-ee9c-43ea-adfc-9b0217f6bec3",
+      "name": "Delete an event1",
+      "retryOnFail": true,
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "fRdvozVqMzqU8R1K",
+          "name": "Google Calendar account"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "00bc35aa-285d-4b2d-b470-9b248b22510f",
+              "name": "message",
+              "value": "Old Email Successfully Replaced, sending email verification",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1152,
+        -192
+      ],
+      "id": "6ab96668-4d8a-4096-9288-c6c001b0f69d",
+      "name": "Successful1"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "00bc35aa-285d-4b2d-b470-9b248b22510f",
+              "name": "message",
+              "value": "Old Email Replacement Failed Due to an Error",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -96,
+        -128
+      ],
+      "id": "9a3dd070-93bc-48a8-a083-ca65291eb89f",
+      "name": "Failed1"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://graph.facebook.com/v24.0/806693059190009/messages ",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "facebookGraphApi",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"recipient\": {\n    \"id\": \"{{ $('When Executed by Another Workflow').item.json.Sender_Id }}\"\n  },\n  \"messaging_type\": \"RESPONSE\",\n  \"message\": {\n    \"text\": \"✅Meeting Info Has been Removed and Email Has Been Replaced Successfully, wait for a moment🤚🏻\"\n  }\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1152,
+        -400
+      ],
+      "id": "b631ddc4-6eeb-4986-8bd3-87dcd326865f",
+      "name": "Confirm Record Removal and Replacement",
+      "alwaysOutputData": false,
+      "credentials": {
+        "facebookGraphApi": {
+          "id": "nO4zRv3ulIF7RWVI",
+          "name": "MDA FB PAGE"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "00bc35aa-285d-4b2d-b470-9b248b22510f",
+              "name": "message",
+              "value": "Old Email Removal Failed Due to an Error",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -96,
+        336
+      ],
+      "id": "7815dfc8-6ce9-4dc3-ad29-6a1bbb6970ad",
+      "name": "Failed2"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1QDG7yr9DbeY2R5zVXR2zuYzOhXNRbjLmHHG4E3q-IcM",
+          "mode": "list",
+          "cachedResultName": "CSR AGENT DATABASE",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1QDG7yr9DbeY2R5zVXR2zuYzOhXNRbjLmHHG4E3q-IcM/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 939932668,
+          "mode": "list",
+          "cachedResultName": "Sender Information",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1QDG7yr9DbeY2R5zVXR2zuYzOhXNRbjLmHHG4E3q-IcM/edit#gid=939932668"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "Sender Id",
+              "lookupValue": "={{ $json.Sender_Id }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -96,
+        112
+      ],
+      "id": "c40d4d81-5496-4016-902d-54508771136a",
+      "name": "Get row(s) in sheet2",
+      "retryOnFail": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "6Ut71cphPkhg1Wje",
+          "name": "Google Sheets account"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "operation": "delete",
+        "calendar": {
+          "__rl": true,
+          "value": "c1ce6208a6e893c79c999f4ed15cd60dcbb4d08646db92b95999855235ccb70a@group.calendar.google.com",
+          "mode": "list",
+          "cachedResultName": "Midknight Automation Client Meeting "
+        },
+        "eventId": "={{ $json['Discovery Meeting Id'] }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleCalendar",
+      "typeVersion": 1.3,
+      "position": [
+        112,
+        96
+      ],
+      "id": "d9d9fea2-5f2a-47fe-b35a-6f01392d0b81",
+      "name": "Delete an event2",
+      "retryOnFail": true,
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "fRdvozVqMzqU8R1K",
+          "name": "Google Calendar account"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "38156c06-b640-4f37-99d6-6017c5ba1393",
+              "leftValue": "={{ $json.error }}",
+              "rightValue": "=The resource you are requesting could not be found",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        352,
+        304
+      ],
+      "id": "93008832-ca19-442b-89c1-66ae9f0a56bb",
+      "name": "If No Booking2"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "38156c06-b640-4f37-99d6-6017c5ba1393",
+              "leftValue": "={{ $json.error }}",
+              "rightValue": "=The resource you are requesting could not be found",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        352,
+        -160
+      ],
+      "id": "e35b2758-df8f-4d35-b5ed-cebffa889f7f",
+      "name": "If No Booking1"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://graph.facebook.com/v24.0/806693059190009/messages ",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "facebookGraphApi",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"recipient\": {\n    \"id\": \"{{ $('When Executed by Another Workflow').item.json.Sender_Id }}\"\n  },\n  \"messaging_type\": \"RESPONSE\",\n  \"message\": {\n    \"text\": \"✅Meeting Schedule has been Removed successfully. Removing email and booking related records; please standby...\"\n  }\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        592,
+        80
+      ],
+      "id": "9bf7cec2-4a1e-4bbf-9b17-d8e51b882499",
+      "name": "Confirm Booking Removal2",
+      "alwaysOutputData": true,
+      "credentials": {
+        "facebookGraphApi": {
+          "id": "nO4zRv3ulIF7RWVI",
+          "name": "MDA FB PAGE"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://graph.facebook.com/v24.0/806693059190009/messages ",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "facebookGraphApi",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"recipient\": {\n    \"id\": \"{{ $('When Executed by Another Workflow').item.json.Sender_Id }}\"\n  },\n  \"messaging_type\": \"RESPONSE\",\n  \"message\": {\n    \"text\": \"✅ Removing email record; please standby...\"\n  }\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        592,
+        288
+      ],
+      "id": "0e7de6a8-9a94-466c-bef7-fed3acf61b2f",
+      "name": "Confirm Email Removal2",
+      "alwaysOutputData": true,
+      "credentials": {
+        "facebookGraphApi": {
+          "id": "nO4zRv3ulIF7RWVI",
+          "name": "MDA FB PAGE"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "1QDG7yr9DbeY2R5zVXR2zuYzOhXNRbjLmHHG4E3q-IcM",
+          "mode": "list",
+          "cachedResultName": "CSR AGENT DATABASE",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1QDG7yr9DbeY2R5zVXR2zuYzOhXNRbjLmHHG4E3q-IcM/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 939932668,
+          "mode": "list",
+          "cachedResultName": "Sender Information",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1QDG7yr9DbeY2R5zVXR2zuYzOhXNRbjLmHHG4E3q-IcM/edit#gid=939932668"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Sender Id": "={{ $('Get row(s) in sheet2').item.json['Sender Id'] }}",
+            "Email Status": "Unverified",
+            "Client Status": "Inquiry",
+            "Meeting Time And Date": "No Record",
+            "Email": "No Record",
+            "Discovery Meeting Id": "No Record",
+            "Discovery Meeting Link": "No Record"
+          },
+          "matchingColumns": [
+            "Sender Id"
+          ],
+          "schema": [
+            {
+              "id": "Sender Id",
+              "displayName": "Sender Id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "First Name",
+              "displayName": "First Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Middle Name",
+              "displayName": "Middle Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Last Name",
+              "displayName": "Last Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Suffix",
+              "displayName": "Suffix",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Contact No.",
+              "displayName": "Contact No.",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Email Status",
+              "displayName": "Email Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Address",
+              "displayName": "Address",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Discovery Meeting Id",
+              "displayName": "Discovery Meeting Id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Discovery Meeting Link",
+              "displayName": "Discovery Meeting Link",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Meeting Time And Date",
+              "displayName": "Meeting Time And Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Client Status",
+              "displayName": "Client Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        832,
+        80
+      ],
+      "id": "327a6876-6f4e-4732-a137-e1ab320af345",
+      "name": "Delete Email1",
+      "retryOnFail": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "6Ut71cphPkhg1Wje",
+          "name": "Google Sheets account"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "1QDG7yr9DbeY2R5zVXR2zuYzOhXNRbjLmHHG4E3q-IcM",
+          "mode": "list",
+          "cachedResultName": "CSR AGENT DATABASE",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1QDG7yr9DbeY2R5zVXR2zuYzOhXNRbjLmHHG4E3q-IcM/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 939932668,
+          "mode": "list",
+          "cachedResultName": "Sender Information",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1QDG7yr9DbeY2R5zVXR2zuYzOhXNRbjLmHHG4E3q-IcM/edit#gid=939932668"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Sender Id": "={{ $('Get row(s) in sheet2').item.json['Sender Id'] }}",
+            "Email Status": "Unverified",
+            "Client Status": "Inquiry",
+            "Email": "=No Record"
+          },
+          "matchingColumns": [
+            "Sender Id"
+          ],
+          "schema": [
+            {
+              "id": "Sender Id",
+              "displayName": "Sender Id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "First Name",
+              "displayName": "First Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Middle Name",
+              "displayName": "Middle Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Last Name",
+              "displayName": "Last Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Suffix",
+              "displayName": "Suffix",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Contact No.",
+              "displayName": "Contact No.",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Email Status",
+              "displayName": "Email Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Address",
+              "displayName": "Address",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Discovery Meeting Id",
+              "displayName": "Discovery Meeting Id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Discovery Meeting Link",
+              "displayName": "Discovery Meeting Link",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Meeting Time And Date",
+              "displayName": "Meeting Time And Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Client Status",
+              "displayName": "Client Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        832,
+        288
+      ],
+      "id": "4040eeb9-4b88-453b-adb5-0403f0bd3f28",
+      "name": "Delete Email2",
+      "retryOnFail": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "6Ut71cphPkhg1Wje",
+          "name": "Google Sheets account"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://graph.facebook.com/v24.0/806693059190009/messages ",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "facebookGraphApi",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"recipient\": {\n    \"id\": \"{{ $('When Executed by Another Workflow').item.json.Sender_Id }}\"\n  },\n  \"messaging_type\": \"RESPONSE\",\n  \"message\": {\n    \"text\": \"✅Meeting Info Has been Removed Successfully, please remember to provide your email later, wait for a moment🤚🏻\"\n  }\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1152,
+        64
+      ],
+      "id": "e8708979-f97c-4871-ab48-59f5aa2fedd1",
+      "name": "Confirm Record Removal",
+      "credentials": {
+        "facebookGraphApi": {
+          "id": "nO4zRv3ulIF7RWVI",
+          "name": "MDA FB PAGE"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "00bc35aa-285d-4b2d-b470-9b248b22510f",
+              "name": "message",
+              "value": "Old Email Successfully Removed, new email is needed",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1152,
+        272
+      ],
+      "id": "69b809a7-7d80-4846-aa09-14cc514c8fb2",
+      "name": "Successful2"
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "1QDG7yr9DbeY2R5zVXR2zuYzOhXNRbjLmHHG4E3q-IcM",
+          "mode": "list",
+          "cachedResultName": "CSR AGENT DATABASE",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1QDG7yr9DbeY2R5zVXR2zuYzOhXNRbjLmHHG4E3q-IcM/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 939932668,
+          "mode": "list",
+          "cachedResultName": "Sender Information",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1QDG7yr9DbeY2R5zVXR2zuYzOhXNRbjLmHHG4E3q-IcM/edit#gid=939932668"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Sender Id": "={{ $('Get row(s) in sheet1').item.json['Sender Id'] }}",
+            "Email Status": "Unverified",
+            "Client Status": "Inquiry",
+            "Email": "={{ $('When Executed by Another Workflow').item.json.New_Email }}"
+          },
+          "matchingColumns": [
+            "Sender Id"
+          ],
+          "schema": [
+            {
+              "id": "Sender Id",
+              "displayName": "Sender Id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "First Name",
+              "displayName": "First Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Middle Name",
+              "displayName": "Middle Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Last Name",
+              "displayName": "Last Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Suffix",
+              "displayName": "Suffix",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Contact No.",
+              "displayName": "Contact No.",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Email Status",
+              "displayName": "Email Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Address",
+              "displayName": "Address",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Discovery Meeting Id",
+              "displayName": "Discovery Meeting Id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Discovery Meeting Link",
+              "displayName": "Discovery Meeting Link",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Meeting Time And Date",
+              "displayName": "Meeting Time And Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Client Status",
+              "displayName": "Client Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        832,
+        -176
+      ],
+      "id": "ba0a64d3-9283-42c7-a1c1-b34d047eded6",
+      "name": "Update Email12",
+      "retryOnFail": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "6Ut71cphPkhg1Wje",
+          "name": "Google Sheets account"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "1QDG7yr9DbeY2R5zVXR2zuYzOhXNRbjLmHHG4E3q-IcM",
+          "mode": "list",
+          "cachedResultName": "CSR AGENT DATABASE",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1QDG7yr9DbeY2R5zVXR2zuYzOhXNRbjLmHHG4E3q-IcM/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 939932668,
+          "mode": "list",
+          "cachedResultName": "Sender Information",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1QDG7yr9DbeY2R5zVXR2zuYzOhXNRbjLmHHG4E3q-IcM/edit#gid=939932668"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Sender Id": "={{ $('Get row(s) in sheet1').item.json['Sender Id'] }}",
+            "Email Status": "Unverified",
+            "Client Status": "Inquiry",
+            "Discovery Meeting Id": "No Record",
+            "Discovery Meeting Link": " No Record",
+            "Meeting Time And Date": " No Record",
+            "Email": "={{ $('When Executed by Another Workflow').item.json.New_Email }}"
+          },
+          "matchingColumns": [
+            "Sender Id"
+          ],
+          "schema": [
+            {
+              "id": "Sender Id",
+              "displayName": "Sender Id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "First Name",
+              "displayName": "First Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Middle Name",
+              "displayName": "Middle Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Last Name",
+              "displayName": "Last Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Suffix",
+              "displayName": "Suffix",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Contact No.",
+              "displayName": "Contact No.",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Email Status",
+              "displayName": "Email Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Address",
+              "displayName": "Address",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Discovery Meeting Id",
+              "displayName": "Discovery Meeting Id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Discovery Meeting Link",
+              "displayName": "Discovery Meeting Link",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Meeting Time And Date",
+              "displayName": "Meeting Time And Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Client Status",
+              "displayName": "Client Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        832,
+        -384
+      ],
+      "id": "791eb0b2-1ade-4098-ad30-1eb41a3b22b9",
+      "name": "Update Email1",
+      "retryOnFail": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "6Ut71cphPkhg1Wje",
+          "name": "Google Sheets account"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://graph.facebook.com/v24.0/806693059190009/messages ",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "facebookGraphApi",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"recipient\": {\n    \"id\": \"{{ $('When Executed by Another Workflow').item.json.Sender_Id }}\"\n  },\n  \"messaging_type\": \"RESPONSE\",\n  \"message\": {\n    \"text\": \"✅Meeting Schedule has been Removed successfully. Removing email and booking related records; please standby...\"\n  }\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        592,
+        -384
+      ],
+      "id": "c95a452a-a6ec-4431-94c4-eebf83c1da68",
+      "name": "Confirm Booking Removal1",
+      "alwaysOutputData": true,
+      "credentials": {
+        "facebookGraphApi": {
+          "id": "nO4zRv3ulIF7RWVI",
+          "name": "MDA FB PAGE"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://graph.facebook.com/v24.0/806693059190009/messages ",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "facebookGraphApi",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"recipient\": {\n    \"id\": \"{{ $('When Executed by Another Workflow').item.json.Sender_Id }}\"\n  },\n  \"messaging_type\": \"RESPONSE\",\n  \"message\": {\n    \"text\": \"✅ Removing email record; please standby...\"\n  }\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        592,
+        -176
+      ],
+      "id": "1df41613-7751-4c7d-a886-a72333ccdeba",
+      "name": "Confirm Email Removal1",
+      "alwaysOutputData": true,
+      "credentials": {
+        "facebookGraphApi": {
+          "id": "nO4zRv3ulIF7RWVI",
+          "name": "MDA FB PAGE"
+        }
+      },
+      "onError": "continueRegularOutput"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "If New Email Provided",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If New Email Provided": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Get row(s) in sheet2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet1": {
+      "main": [
+        [
+          {
+            "node": "Delete an event1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Failed1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Delete an event1": {
+      "main": [
+        [
+          {
+            "node": "Confirm Booking Removal1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "If No Booking1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Successful1": {
+      "main": [
+        []
+      ]
+    },
+    "Get row(s) in sheet2": {
+      "main": [
+        [
+          {
+            "node": "Delete an event2",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Failed2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Delete an event2": {
+      "main": [
+        [
+          {
+            "node": "Confirm Booking Removal2",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "If No Booking2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If No Booking2": {
+      "main": [
+        [
+          {
+            "node": "Confirm Email Removal2",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Failed2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If No Booking1": {
+      "main": [
+        [
+          {
+            "node": "Confirm Email Removal1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Failed1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Confirm Booking Removal2": {
+      "main": [
+        [
+          {
+            "node": "Delete Email1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        []
+      ]
+    },
+    "Confirm Email Removal2": {
+      "main": [
+        [
+          {
+            "node": "Delete Email2",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        []
+      ]
+    },
+    "Delete Email1": {
+      "main": [
+        [
+          {
+            "node": "Successful2",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Confirm Record Removal",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Failed2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Delete Email2": {
+      "main": [
+        [
+          {
+            "node": "Successful2",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Confirm Record Removal",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Failed2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Email12": {
+      "main": [
+        [
+          {
+            "node": "Successful1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Confirm Record Removal and Replacement",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Failed1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Email1": {
+      "main": [
+        [
+          {
+            "node": "Successful1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Confirm Record Removal and Replacement",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Failed1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Confirm Booking Removal1": {
+      "main": [
+        [
+          {
+            "node": "Update Email1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        []
+      ]
+    },
+    "Confirm Email Removal1": {
+      "main": [
+        [
+          {
+            "node": "Update Email12",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        []
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "838ec971-e8c3-4a39-bd86-5e9cd5a7bf46",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "a3b96ecce66c34acc113f9eec63f47ca627f695f8598a977cf984773aef4af6c"
+  },
+  "id": "7Txl1CvVxq4fo6D4",
+  "tags": []
+}

@@ -1,0 +1,81 @@
+{
+  "name": "Email Meet Link",
+  "nodes": [
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "Email Address"
+            },
+            {
+              "name": "Meeting link"
+            },
+            {
+              "name": "Conversation History"
+            },
+            {
+              "name": "Full Name Of Client"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -432,
+        0
+      ],
+      "id": "54c3f576-7589-449c-8a0c-44b1452a457a",
+      "name": "When Executed by Another Workflow"
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $json['Email Address'] }}",
+        "subject": "Google Meeting",
+        "message": "=Your Scheduled Meetin\n\nHi , {{ $json['Full Name Of Client'] }}\n\nThank you for your interest in our automation services! 💡\nWe’d love to get to know your business better and explore how we can help you streamline your workflows, save time, and grow faster.\n\nIn this Discovery Meeting, we’ll:\n✅ Understand your goals and current challenges\n✅ Identify areas where automation can make an impact\n✅ Share customized ideas and possible next steps\n\nHere is your meeting link:\n👉 {{ $json['Meeting link'] }}\n\nOnce you’ve booked, you’ll automatically receive a confirmation email with all the details.\n\nLooking forward to connecting with you soon!\nWarm regards,\n\nMidknight_Uzer\nAutomation Specialist\nMidknight Automation\n\n\n\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        -192,
+        0
+      ],
+      "id": "170a2642-6462-4ac5-ac32-9218b8390dc0",
+      "name": "Send a message",
+      "webhookId": "c284f4b1-d658-48b3-a99f-a4343d98d48d",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "nlQF0yG166gTU6al",
+          "name": "Gmail account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "a4c71828-f1a0-4bd8-8feb-74a8464aaad5",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "a3b96ecce66c34acc113f9eec63f47ca627f695f8598a977cf984773aef4af6c"
+  },
+  "id": "8yFLaRxQMYRj0tB9",
+  "tags": []
+}

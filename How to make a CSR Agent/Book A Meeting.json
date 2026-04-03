@@ -1,0 +1,427 @@
+{
+  "name": "Book A Meeting",
+  "nodes": [
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "Sender_Id"
+            },
+            {
+              "name": "Start"
+            },
+            {
+              "name": "End"
+            },
+            {
+              "name": "Title"
+            },
+            {
+              "name": "Description"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -432,
+        80
+      ],
+      "id": "9ce48874-2787-4108-88a7-0fcbae21e7f4",
+      "name": "When Executed by Another Workflow"
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "1QDG7yr9DbeY2R5zVXR2zuYzOhXNRbjLmHHG4E3q-IcM",
+          "mode": "list",
+          "cachedResultName": "CSR AGENT DATABASE",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1QDG7yr9DbeY2R5zVXR2zuYzOhXNRbjLmHHG4E3q-IcM/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 939932668,
+          "mode": "list",
+          "cachedResultName": "Sender Information",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1QDG7yr9DbeY2R5zVXR2zuYzOhXNRbjLmHHG4E3q-IcM/edit#gid=939932668"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Client Status": "Booked",
+            "Discovery Meeting Id": "={{ $json.id }}",
+            "Discovery Meeting Link": "={{ $json.conferenceData.entryPoints[0].uri }}",
+            "Meeting Time And Date": "={{ $('When Executed by Another Workflow').item.json.Title }}\nFrom {{\n  (() => {\n    const d = new Date($json.start.dateTime);\n    const pst = new Date(d.toLocaleString('en-US', { timeZone: 'Asia/Manila' }));\n    const day = pst.toLocaleString('en-PH', { weekday: 'long' });\n    const date = pst.toLocaleString('en-PH', { month: '2-digit', day: '2-digit', year: 'numeric' });\n    const time = pst.toLocaleString('en-PH', { hour: '2-digit', minute: '2-digit', hour12: true });\n    const period = pst.getHours() < 12 ? 'Morning' : 'Evening';\n    return `${day}, ${date} ${time} (${period})`;\n  })()\n}}\nTo {{\n  (() => {\n    const d = new Date($json.end.dateTime);\n    const pst = new Date(d.toLocaleString('en-US', { timeZone: 'Asia/Manila' }));\n    const day = pst.toLocaleString('en-PH', { weekday: 'long' });\n    const date = pst.toLocaleString('en-PH', { month: '2-digit', day: '2-digit', year: 'numeric' });\n    const time = pst.toLocaleString('en-PH', { hour: '2-digit', minute: '2-digit', hour12: true });\n    const period = pst.getHours() < 12 ? 'Morning' : 'Evening';\n    return `${day}, ${date} ${time} (${period})`;\n  })()\n}}\n\n",
+            "Sender Id": "={{ $('When Executed by Another Workflow').item.json.Sender_Id }}"
+          },
+          "matchingColumns": [
+            "Sender Id"
+          ],
+          "schema": [
+            {
+              "id": "Sender Id",
+              "displayName": "Sender Id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "First Name",
+              "displayName": "First Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Middle Name",
+              "displayName": "Middle Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Last Name",
+              "displayName": "Last Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Suffix",
+              "displayName": "Suffix",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Contact No.",
+              "displayName": "Contact No.",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Email Status",
+              "displayName": "Email Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Address",
+              "displayName": "Address",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Discovery Meeting Id",
+              "displayName": "Discovery Meeting Id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Discovery Meeting Link",
+              "displayName": "Discovery Meeting Link",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Meeting Time And Date",
+              "displayName": "Meeting Time And Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Client Status",
+              "displayName": "Client Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        208,
+        64
+      ],
+      "id": "e4f299af-a0a6-4f73-884f-7faf35d764cd",
+      "name": "Append or update row in sheet",
+      "retryOnFail": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "6Ut71cphPkhg1Wje",
+          "name": "Google Sheets account"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "calendar": {
+          "__rl": true,
+          "value": "c1ce6208a6e893c79c999f4ed15cd60dcbb4d08646db92b95999855235ccb70a@group.calendar.google.com",
+          "mode": "list",
+          "cachedResultName": "Midknight Automation Client Meeting "
+        },
+        "start": "={{ $json.Start }}",
+        "end": "={{ $json.End }}",
+        "additionalFields": {
+          "conferenceDataUi": {
+            "conferenceDataValues": {
+              "conferenceSolution": "hangoutsMeet"
+            }
+          },
+          "description": "={{ $json.Description }}",
+          "summary": "={{ $json.Title }}"
+        }
+      },
+      "type": "n8n-nodes-base.googleCalendar",
+      "typeVersion": 1.3,
+      "position": [
+        -176,
+        80
+      ],
+      "id": "a63c0cea-e6ec-465a-aacc-361987117e13",
+      "name": "Create an event",
+      "retryOnFail": true,
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "fRdvozVqMzqU8R1K",
+          "name": "Google Calendar account"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "0849d290-6938-44b2-ae30-297a6cd27f7b",
+              "name": "message",
+              "value": "Meeting Scheduling Process Failed due to an error",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -176,
+        336
+      ],
+      "id": "75c91956-9146-48f3-b1a5-7df4c5a28d28",
+      "name": "Failed"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://graph.facebook.com/v24.0/806693059190009/messages ",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "facebookGraphApi",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"recipient\": {\n    \"id\": \"{{ $('When Executed by Another Workflow').item.json.Sender_Id }}\"\n  },\n  \"messaging_type\": \"RESPONSE\",\n  \"message\": {\n    \"text\": \"✅Meeting has been booked successfully. Processing records; please standby...\"\n  }\n}\n ",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        16,
+        -112
+      ],
+      "id": "20587cbb-ba43-4867-8bb5-d33b0da4872e",
+      "name": "Confirm Booking",
+      "credentials": {
+        "facebookGraphApi": {
+          "id": "nO4zRv3ulIF7RWVI",
+          "name": "MDA FB PAGE"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://graph.facebook.com/v24.0/806693059190009/messages ",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "facebookGraphApi",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"recipient\": {\n    \"id\": \"{{ $('When Executed by Another Workflow').item.json.Sender_Id }}\"\n  },\n  \"messaging_type\": \"RESPONSE\",\n  \"message\": {\n    \"text\": \"✅Meeting Info Has Been Stored, please wait for a moment🤚🏻\"\n  }\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        416,
+        -112
+      ],
+      "id": "7198a7c8-15a5-420f-9d4f-64c648b2bb91",
+      "name": "Confirm Record",
+      "credentials": {
+        "facebookGraphApi": {
+          "id": "nO4zRv3ulIF7RWVI",
+          "name": "MDA FB PAGE"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Pull field from input\nconst raw = $input.first().json['Meeting Time And Date'] ?? \"\";\nconst meetingLink = $input.first().json['Discovery Meeting Link'] ?? \"\";\n\n// Remove tags like \"(Morning)\", \"(Evening)\", \"(Afternoon)\" and extra spaces\nconst cleaned = raw\n  .replace(/\\(.*?\\)/g, \"\")  // removes anything inside parentheses\n  .replace(/ +/g, \" \")      // normalize multiple spaces\n  .trim();\n\n// Split lines and remove blank lines\nconst lines = cleaned.split(\"\\n\").filter(l => l.trim() !== \"\");\n\n// Extract only the time lines (line 0 is title like \"Discovery Meeting with ___\")\nconst startStr = lines[1].replace(/^From\\s*/i, \"\").trim();\nconst endStr = lines[2].replace(/^To\\s*/i, \"\").trim();\n\n// Convert readable date string to proper Date()\nfunction parseDate(str) {\n  // Expected: \"Friday, 12/12/2025 07:00 AM\"\n  const match = str.match(/^[A-Za-z]+,\\s*([\\d/]+)\\s*(.*)$/);\n  if (!match) return null;\n\n  const datePart = match[1]; // 12/12/2025\n  const timePart = match[2]; // 07:00 AM\n  const [month, day, year] = datePart.split(\"/\");\n\n  return new Date(`${year}-${month}-${day} ${timePart}`);\n}\n\nconst startDate = parseDate(startStr);\nconst endDate = parseDate(endStr);\n\n// Validation fallback\nif (!startDate || !endDate || isNaN(startDate) || isNaN(endDate)) {\n  return [{\n    json: {\n      message: \"⚠️ Unable to format the meeting time. Please confirm the schedule format.\"\n    }\n  }];\n}\n\n// Time-of-day classification\nfunction getTimePeriod(dateObj) {\n  const h = dateObj.getHours();\n  const m = dateObj.getMinutes();\n\n  if (h === 12 && m === 0) return \"noon\";\n  if (h === 0 && m === 0) return \"midnight\";\n  if (h >= 5 && h < 12) return \"morning\";\n  if (h >= 12 && h < 18) return \"afternoon\";\n  if (h >= 18 && h <= 23) return \"evening\";\n\n  return \"late night\";\n}\n\nconst period = getTimePeriod(startDate);\n\n// Format readable final text\nconst dayName = startDate.toLocaleDateString(\"en-US\", { weekday: \"long\" });\nconst formattedDate = startDate.toLocaleDateString(\"en-US\", { month: \"long\", day: \"numeric\", year: \"numeric\" });\n\nconst startTime = startDate.toLocaleTimeString(\"en-US\", { hour: \"2-digit\", minute: \"2-digit\" });\nconst endTime = endDate.toLocaleTimeString(\"en-US\", { hour: \"2-digit\", minute: \"2-digit\" });\n\n// Build final message\nlet message = `Your meeting is scheduled on ${dayName}, ${formattedDate} (${period}) from ${startTime} to ${endTime}.`;\n\nif (meetingLink.trim()) {\n  message += `\\nHere is your meeting link:\\n${meetingLink}`;\n}\n\nreturn [{ json: { message } }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        592,
+        48
+      ],
+      "id": "2623e052-8391-4f59-b55b-4bea44d6714b",
+      "name": "Success",
+      "retryOnFail": true,
+      "onError": "continueErrorOutput"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "Create an event",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append or update row in sheet": {
+      "main": [
+        [
+          {
+            "node": "Success",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Confirm Record",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Failed",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create an event": {
+      "main": [
+        [
+          {
+            "node": "Append or update row in sheet",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Confirm Booking",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Failed",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Success": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Failed",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "bcce2d72-8eb9-4c21-a458-312d29d62ed7",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "a3b96ecce66c34acc113f9eec63f47ca627f695f8598a977cf984773aef4af6c"
+  },
+  "id": "SxHDRJd5pI2ybWJ7",
+  "tags": []
+}
