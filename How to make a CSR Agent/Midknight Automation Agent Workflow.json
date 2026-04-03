@@ -1,0 +1,2277 @@
+{
+  "name": "Midknight Automation Agent Workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "multipleMethods": true,
+        "httpMethod": [
+          "POST"
+        ],
+        "path": "YourURL",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -6816,
+        800
+      ],
+      "id": "ea36733d-b479-46a6-91e8-532bc64db64e",
+      "name": "Webhook1",
+      "webhookId": "<Your Webhook Id>"
+    },
+    {
+      "parameters": {
+        "numberInputs": 7,
+        "rules": {
+          "rule": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "a8edc066-84a6-45d5-b351-eff0da3dc369",
+                    "leftValue": "={{ $json.Count }}",
+                    "rightValue": 1,
+                    "operator": {
+                      "type": "number",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "modelIndex": 2,
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "76d5fbf4-63ea-4366-8ddf-6087f6bc868d",
+                    "leftValue": "={{ $json.Count }}",
+                    "rightValue": 2,
+                    "operator": {
+                      "type": "number",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "modelIndex": 3,
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "914d13c5-b3e6-46c3-b5fb-421e79d7c649",
+                    "leftValue": "={{ $json.Count }}",
+                    "rightValue": 3,
+                    "operator": {
+                      "type": "number",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "modelIndex": 4,
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "c7885935-5ed3-43b0-afdf-06e13a273be0",
+                    "leftValue": "={{ $json.Count }}",
+                    "rightValue": 4,
+                    "operator": {
+                      "type": "number",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "modelIndex": 5,
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "f1024bee-58fb-4931-b553-4105877decf9",
+                    "leftValue": "={{ $json.Count }}",
+                    "rightValue": 5,
+                    "operator": {
+                      "type": "number",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "modelIndex": 6,
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "2cd2e519-6532-45a9-a6a9-c31c18660f26",
+                    "leftValue": "={{ $json.Count }}",
+                    "rightValue": 6,
+                    "operator": {
+                      "type": "number",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "modelIndex": 7,
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "d69469fd-5e88-48a5-b677-5f36a7229b9e",
+                    "leftValue": "={{ $json.Count }}",
+                    "rightValue": 7,
+                    "operator": {
+                      "type": "number",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.modelSelector",
+      "typeVersion": 1,
+      "position": [
+        -5856,
+        1584
+      ],
+      "id": "5aa918e0-19e4-4445-8df8-1ce85f5774b2",
+      "name": "1️⃣ Model Selector  (AC Free Model Switcher)"
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $('Persistent Value').item.json.senderId }}",
+        "contextWindowLength": 20
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        -5424,
+        1584
+      ],
+      "id": "26dd78f2-b22c-4955-af1b-f668c2614891",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Get Filter output (instead of Webhook1)\nconst data =$input.first().json.body.entry[0].messaging[0];\n\n// Extract values\nconst senderId = data.sender.id;\nconst messageText = data.message.text;\n\n// Format timestamp\nconst timestamp = $input.first().json.body.entry[0].time;\n\nconst formattedTime = new Date(timestamp).toLocaleString('en-PH', {\n  month: 'long',\n  day: 'numeric',\n  year: 'numeric',\n  hour: 'numeric',\n  minute: '2-digit',\n  second: '2-digit',\n  hour12: true,\n  timeZone: 'Asia/Manila'\n});\n\n\n// Return output\nreturn [\n  {\n    json: {\n      senderId,\n      messageText,\n      formattedTime,\n    }\n  }\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -6384,
+        800
+      ],
+      "id": "5309993f-e162-4308-ae32-b5231b93fd75",
+      "name": "Persistent Value"
+    },
+    {
+      "parameters": {
+        "method": "=POST",
+        "url": "=https://graph.facebook.com/v24.0/{{ $('Webhook1').item.json.body.entry[0].id }}/messages ",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "facebookGraphApi",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"recipient\": {\n    \"id\": \"{{ $('Webhook1').item.json.body.entry[0].messaging[0].sender.id }}\"\n  },\n  \"messaging_type\": \"RESPONSE\",\n  \"message\": {\n    \"text\": \"{{ $json.output.replace(/\\n/g, '\\\\n') }}\"\n  }\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -4848,
+        1024
+      ],
+      "id": "8e376415-88c1-4c13-abeb-3550e9d429ed",
+      "name": "Send Reply",
+      "credentials": {
+        "facebookGraphApi": {
+          "id": "0jZYN97uXcZxl952",
+          "name": "UNSAID FEELINGS FB PAGE"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "<Execute Counter Subworkflow ID>",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/<Execute Counter Subworkflow ID>",
+          "cachedResultName": "Counter WorkFlow"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {}
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.3,
+      "position": [
+        -5712,
+        1024
+      ],
+      "id": "850effa0-7ff6-4c32-b722-757167d0086b",
+      "name": "Execute Counter"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "<googlesheet>",
+          "mode": "list",
+          "cachedResultName": "CSR AGENT DATABASE",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/<googlesheet>/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 939932668,
+          "mode": "list",
+          "cachedResultName": "Sender Information",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/<googlesheet>/edit#gid=939932668"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "Sender Id",
+              "lookupValue": "={{ $json.senderId }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -6144,
+        800
+      ],
+      "id": "d4cf919a-6d82-4e94-be59-b7a3b0a8d4df",
+      "name": "Get Sender Id",
+      "alwaysOutputData": true,
+      "retryOnFail": true,
+      "maxTries": 5,
+      "waitBetweenTries": 1000,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "MCQuBU2NZK2lE9jQ",
+          "name": "Google Sheets test"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "7061cbc4-0321-437f-a226-01f23dfaa1bf",
+              "leftValue": "={{ $('When Executed by Another Workflow').item.json.body.entry[0].messaging[0].message.mid }}",
+              "rightValue": "={{ $json.MID }}",
+              "operator": {
+                "type": "string",
+                "operation": "notEquals"
+              }
+            },
+            {
+              "id": "a4476527-ab64-4b2b-8d19-6792ce0099f5",
+              "leftValue": "={{ $json[\"Chat History\"] }}",
+              "rightValue": "={{ $('When Executed by Another Workflow').item.json.body.entry[0].messaging[0].message.text }}",
+              "operator": {
+                "type": "string",
+                "operation": "notEquals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -5392,
+        800
+      ],
+      "id": "122996d1-c05b-4dd6-bf87-4836b4d95f6f",
+      "name": "If Excess Webhook"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Get incoming item\nconst item = $json;\n\n// List of fields to check\nconst fieldsToCheck = [\n  \"Sender Id\",\n  \"First Name\",\n  \"Middle Name\",\n  \"Last Name\",\n  \"Suffix\",\n  \"Contact No.\",\n  \"Email\",\n  \"Email Status\",\n  \"Address\",\n  \"Discovery Meeting Id\",\n  \"Discovery Meeting Link\",\n  \"Meeting Time And Date\",\n  \"Client Status\"\n];\n\nlet output = {};\nlet exists = false;\n\n// Loop through fields\nfor (const field of fieldsToCheck) {\n  const val = item[field];\n\n  // If field has real data, mark exists\n  if (val !== undefined && val !== null && String(val).trim() !== \"\") {\n    exists = true;\n    output[field] = val;             // return value\n  } else {\n    output[field] = \"No Record\";     // return No Record\n  }\n}\n\n// Add sender status\noutput.Sender_Status = exists ? \"Recurring Sender\" : \"New Sender\";\n\n// n8n requires array output\nreturn [\n  {\n    json: output\n  }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -5888,
+        800
+      ],
+      "id": "0534dd92-7f93-44de-bf23-c345947ec57c",
+      "name": "Sender Status"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "<googlesheet>",
+          "mode": "list",
+          "cachedResultName": "CSR AGENT DATABASE",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/<googlesheet>/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Chat History",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/<googlesheet>/edit#gid=0"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "Sender Id",
+              "lookupValue": "={{ $('Persistent Value').item.json.senderId }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -5632,
+        800
+      ],
+      "id": "7a63c2cd-bae8-446e-87b8-f57360570fe0",
+      "name": "Get Chat",
+      "alwaysOutputData": true,
+      "retryOnFail": true,
+      "maxTries": 5,
+      "waitBetweenTries": 1000,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "MCQuBU2NZK2lE9jQ",
+          "name": "Google Sheets test"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Get the incoming data\nconst item = $json;\n\n// The fields we want to check\nconst fieldsToCheck = [\n  \"Sender Id\",\n  \"Time Stamp\",\n  \"Chat History\",\n  \"Summary\",\n  \"MID\"\n];\n\nlet output = {};\n\n// Loop and set values or \"No Record\"\nfor (const field of fieldsToCheck) {\n  const val = item[field];\n\n  if (val !== undefined && val !== null && String(val).trim() !== \"\") {\n    output[field] = val;             // actual value\n  } else {\n    output[field] = \"No Record\";     // missing or empty\n  }\n}\n\n// Return in the required format for n8n\nreturn [\n  {\n    json: output\n  }\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -5104,
+        784
+      ],
+      "id": "7048266a-08bb-47b7-9757-ac1504425ea0",
+      "name": "Chat Summary"
+    },
+    {
+      "parameters": {
+        "description": "Calls n8n workflow to remove a Google Calendar event and auto-clears Info_Storage_TOOL (Id/Link/Time/Date; sets Client Status to \"Inquiry\"; keeps Email Status \"Validated\"). Use after user confirmation. Returns success or error message. If no event found, returns \"No meeting to cancel.\"",
+        "workflowId": {
+          "__rl": true,
+          "value": "<Cancel A Meeting Tool Subworkflow Id>",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/<Cancel A Meeting Tool Subworkflow Id>",
+          "cachedResultName": "Delete A Meeting"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Sender_Id": "={{ $('Persistent Value').item.json.senderId }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Sender_Id",
+              "displayName": "Sender_Id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.2,
+      "position": [
+        -4672,
+        1328
+      ],
+      "id": "62b0d319-cfae-47db-8f66-226c160df568",
+      "name": "Cancel_A_Meeting_TOOL"
+    },
+    {
+      "parameters": {
+        "description": "Calls n8n workflow to replace or remove email, auto-resetting related fields in Info_Storage_TOOL (deletes events; clears meeting fields; sets Client Status \"Inquiry\" and Email Status \"Unverified\"). If no new email, removes old one. Returns success message (e.g., \"Email updated—verification sent\") or error. Use when sender provides new email; follow with verification tool.",
+        "workflowId": {
+          "__rl": true,
+          "value": "<Change Email tool Subworkflow ID>",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/<Change Email tool Subworkflow ID>",
+          "cachedResultName": "Change Email"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Sender_Id": "={{ $('Persistent Value').item.json.senderId }}",
+            "New_Email": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('New_Email', `New email address (string, required; validate format; if empty, leave it empty).`, 'string') }}"
+          },
+          "matchingColumns": [
+            "Sender_Id"
+          ],
+          "schema": [
+            {
+              "id": "Sender_Id",
+              "displayName": "Sender_Id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "New_Email",
+              "displayName": "New_Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.2,
+      "position": [
+        -4496,
+        1328
+      ],
+      "id": "d7336bbb-237e-472a-9f1a-6aa419aaf3c7",
+      "name": "Change_Email_TOOL"
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "Retrieves all booked meeting slots from Google Calendar within a date range. Inputs in ISO 8601; returns list of booked datetimes. Use for suggesting alternatives; limit range to 30 days max for performance. If no bookings, returns empty list. On error, returns \"Booked slots unavailable—specify a time instead.",
+        "operation": "getAll",
+        "calendar": {
+          "__rl": true,
+          "value": "<YOUR_CALENDAR_ID@group.calendar.google.com>",
+          "mode": "list",
+          "cachedResultName": "Midknight Automation Client Meeting "
+        },
+        "returnAll": true,
+        "timeMin": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('After', `Range end (string, required; ISO 8601, max 30 days after start).`, 'string') }}",
+        "timeMax": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Before', `Range start (string, required; ISO 8601).`, 'string') }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "typeVersion": 1.3,
+      "position": [
+        -5200,
+        1328
+      ],
+      "id": "f923296a-cf1a-45e6-bec8-9da0dab2e4e1",
+      "name": "Get_All_Booked_Slots_TOOL"
+    },
+    {
+      "parameters": {
+        "description": "Checks a specific time slot's availability in Google Calendar for meetings. Inputs in ISO 8601 PH time (UTC+8); returns \"Available\" or \"Not Available.\" Use before booking/rescheduling; assumes 1-hour slots by default. If times overlap existing, marks unavailable. On calendar access error, returns \"Availability check failed—try alternative time.",
+        "workflowId": {
+          "__rl": true,
+          "value": "<Get Schedule Availability Subworkflow Id>",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/<Get Schedule Availability Subworkflow Id>",
+          "cachedResultName": "Get Schedule Availability"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Time Start": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Time_Start', `Slot start time (string, required; ISO 8601, e.g., \"2025-12-10T14:00:00+08:00\").`, 'string') }}",
+            "Time End": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Time_End', `Slot end time (string, required; ISO 8601, must be after start).`, 'string') }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Time Start",
+              "displayName": "Time Start",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "Time End",
+              "displayName": "Time End",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.2,
+      "position": [
+        -5376,
+        1328
+      ],
+      "id": "ade98e73-62ca-452c-ba13-632c2516e707",
+      "name": "Get_Schedule_Availability_TOOL"
+    },
+    {
+      "parameters": {
+        "description": "Triggers an n8n workflow to verify an email's existence and format, sending a validation code if valid. Requires full name for personalization; auto-updates Email Status in Info_Storage_TOOL (\"Verified\" if valid, \"Unverified\" otherwise). Use after storing new email; returns result message and code (if applicable). If email invalid, do not store; on network failure, retry once internally",
+        "workflowId": {
+          "__rl": true,
+          "value": "<Change Email Verification Subworkflow Id>",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/<Change Email Verification Subworkflow Id>",
+          "cachedResultName": "Email Format Verification"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Email": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Email', `Sender's email address (string, required; must be valid format).`, 'string') }}",
+            "Name": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Name', `Sender's full name (string, required; combined from name parts).`, 'string') }}",
+            "SenderId": "={{ $('Persistent Value').item.json.senderId }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "Name",
+              "displayName": "Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "SenderId",
+              "displayName": "SenderId",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.2,
+      "position": [
+        -5552,
+        1328
+      ],
+      "id": "c6aa18eb-5fbd-4058-a103-db332a3f580b",
+      "name": "Send_Email_Verification_TOOL"
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.toolCalculator",
+      "typeVersion": 1,
+      "position": [
+        -5712,
+        1328
+      ],
+      "id": "5f7508f0-60df-4191-8843-2f407a27a447",
+      "name": "Calculator_TOOL"
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "Appends or updates sender contact in a Google Sheet. Handles partial updates (e.g., only new fields); does not update Email Status (external). Use immediately when info provided; auto-validates formats (e.g., names as strings). ",
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "<googlesheet>",
+          "mode": "list",
+          "cachedResultName": "CSR AGENT DATABASE",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/<googlesheet>/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 939932668,
+          "mode": "list",
+          "cachedResultName": "Sender Information",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/<googlesheet>/edit#gid=939932668"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "First Name": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('First_Name', `Sender's first name (string, optional; alphabetic only).`, 'string') }}",
+            "Middle Name": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Middle_Name', `Sender's middle name (string, optional; alphabetic only).`, 'string') }}",
+            "Last Name": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Last_Name', `Sender's last name (string, optional; alphabetic only).`, 'string') }}",
+            "Suffix": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Suffix', `Name suffix (e.g., Jr.) (string, optional).`, 'string') }}",
+            "Contact No.": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Contact_No_', `Cleaned phone number (string, optional; validated as 10-15 digits with optional +).`, 'string') }}",
+            "Email": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Email', `Sender's email (string, optional; validate format before passing).`, 'string') }}",
+            "Address": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Address', `Sender's address (string, optional; for timezone parsing).`, 'string') }}",
+            "Sender Id": "={{ $('Persistent Value').item.json.senderId }}"
+          },
+          "matchingColumns": [
+            "Sender Id"
+          ],
+          "schema": [
+            {
+              "id": "Sender Id",
+              "displayName": "Sender Id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "First Name",
+              "displayName": "First Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Middle Name",
+              "displayName": "Middle Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Last Name",
+              "displayName": "Last Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Suffix",
+              "displayName": "Suffix",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Contact No.",
+              "displayName": "Contact No.",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Email Status",
+              "displayName": "Email Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Address",
+              "displayName": "Address",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Discovery Meeting Id",
+              "displayName": "Discovery Meeting Id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Discovery Meeting Link",
+              "displayName": "Discovery Meeting Link",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Meeting Time And Date",
+              "displayName": "Meeting Time And Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Client Status",
+              "displayName": "Client Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.7,
+      "position": [
+        -5872,
+        1328
+      ],
+      "id": "44fe4eb2-2dda-4537-b0ee-0103fa9da9be",
+      "name": "Info_Storage_TOOL",
+      "notesInFlow": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "MCQuBU2NZK2lE9jQ",
+          "name": "Google Sheets test"
+        }
+      },
+      "notes": "Append/Update"
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "Appends or updates conversation data in a Google Sheet for persistent chat history and summaries. Always call first per message to save sender input; combines previous summary with current message into a concise paraphrase (e.g., 100-200 words max). For new senders, summarize only the first message. Does not store assistant responses. If sheet access fails, log error internally but proceed (no user notification). Use expressions for dynamic fields; validates input lengths to prevent overflows.",
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "<googlesheet>",
+          "mode": "list",
+          "cachedResultName": "CSR AGENT DATABASE",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/<googlesheet>/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Chat History",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/<googlesheet>/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Sender Id": "={{ $('Persistent Value').item.json.senderId }}",
+            "Time Stamp": "={{ $('Persistent Value').item.json.formattedTime }}",
+            "Chat History": "={{ $('Persistent Value').item.json.messageText }}",
+            "MID": "={{ $('Webhook1').item.json.body.entry[0].messaging[0].message.mid }}",
+            "Summary": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Summary', `Put the summary of the chat history and the message here`, 'string') }}"
+          },
+          "matchingColumns": [
+            "Sender Id"
+          ],
+          "schema": [
+            {
+              "id": "Sender Id",
+              "displayName": "Sender Id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Time Stamp",
+              "displayName": "Time Stamp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Chat History",
+              "displayName": "Chat History",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Summary",
+              "displayName": "Summary",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "MID",
+              "displayName": "MID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.7,
+      "position": [
+        -6032,
+        1328
+      ],
+      "id": "8cb8a1d7-23cf-48a2-a661-ab526ce93d5b",
+      "name": "Chat_Storage_TOOL",
+      "notesInFlow": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "MCQuBU2NZK2lE9jQ",
+          "name": "Google Sheets test"
+        }
+      },
+      "notes": "Append/Update"
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "Retrieves official Midknight Automation information from a Google Doc knowledge base for accurate responses to inquiries (e.g., company details, services, pricing, integrations). Fixed inputs pre-configured—no need for custom queries; call to fetch sections like overviews, services, or policies. Use only for service-related answers; never invent info. Returns structured text; parse for integration into human-like responses. Handles up to 10 sections per call; if doc access fails, returns \"Service overview unavailable—please try later.\" Ideal for new sender greetings or inquiry",
+        "operation": "get",
+        "documentURL": "=1ZNLNmeZD_9APpNSCoCxtVpiboGJcuUe0Pw8CDZdiP2c",
+        "simple": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Simplify', ``, 'boolean') }}"
+      },
+      "type": "n8n-nodes-base.googleDocsTool",
+      "typeVersion": 2,
+      "position": [
+        -6176,
+        1328
+      ],
+      "id": "07f33fa4-34ee-440b-a92a-44ba2ff8bc7f",
+      "name": "Script_TOOL",
+      "credentials": {
+        "googleDocsOAuth2Api": {
+          "id": "lWRY9LBfedAYqLeW",
+          "name": "Google Docs account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "description": "Internal reasoning scratchpad for analyzing workflows, sender messages, and inputs to plan next steps or decide on tool sequences. Use before complex decisions (e.g., ambiguous intents, multi-tool chains) to note plans without exposing to the sender. Outputs are not user-visible; purely for agent internal use. No persistent storage; each call is isolated. Avoid overuse for simple responses to maintain efficiency. If input is invalid, tool returns a neutral \"No action needed\" message."
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolThink",
+      "typeVersion": 1.1,
+      "position": [
+        -6304,
+        1328
+      ],
+      "id": "b519d3ca-6b76-4352-b339-4c1db155996f",
+      "name": "Think_TOOL"
+    },
+    {
+      "parameters": {
+        "description": "Calls n8n workflow to create a Google Calendar event and auto-stores details in Info_Storage_TOOL (Discovery Meeting Id/Link/Time/Date; sets Client Status to \"Booked\"). Use only after availability confirmation and user approval. Inputs in ISO 8601 PH time. Returns success message with details or error.",
+        "workflowId": {
+          "__rl": true,
+          "value": "SxHDRJd5pI2ybWJ7",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/SxHDRJd5pI2ybWJ7",
+          "cachedResultName": "Book A Meeting"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Start": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Start', `Meeting start (string, required; ISO 8601)`, 'string') }}",
+            "End": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('End', `Meeting end (string, required; ISO 8601).`, 'string') }}",
+            "Title": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Title', `Event title (string, required; e.g., \"Discovery Meeting with [Name]\").`, 'string') }}",
+            "Description": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Description', `Event description (string, required; include sender details).`, 'string') }}",
+            "Sender_Id": "={{ $('Persistent Value').item.json.senderId }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Sender_Id",
+              "displayName": "Sender_Id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "Start",
+              "displayName": "Start",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "End",
+              "displayName": "End",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "Title",
+              "displayName": "Title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "Description",
+              "displayName": "Description",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.2,
+      "position": [
+        -5024,
+        1328
+      ],
+      "id": "193e7fcc-7f53-44c3-83f9-9b77a6a4b2d2",
+      "name": "Book_A_Meeting_TOOL"
+    },
+    {
+      "parameters": {
+        "description": "Calls n8n workflow to update an existing Google Calendar event and auto-updates Info_Storage_TOOL (Link/Date/Time; keeps Client Status \"Booked\"). Use after confirmation and availability check. Inputs in ISO 8601 PH time. Returns reschedule success message or error. Requires valid existing Meeting Id; if invalid, fails gracefully.",
+        "workflowId": {
+          "__rl": true,
+          "value": "qQBX1H5K60XwEjP1",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/qQBX1H5K60XwEjP1",
+          "cachedResultName": "ReBook A Meeting"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Sender_Id": "={{ $('Persistent Value').item.json.senderId }}",
+            "Discovery_Meeting_Id": "={{ $('Sender Status').item.json['Discovery Meeting Id'] }}",
+            "Start": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Start', `New start time (string, required; ISO 8601).`, 'string') }}",
+            "End": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('End', `New end time (string, required; ISO 8601).`, 'string') }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Sender_Id",
+              "displayName": "Sender_Id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "Discovery_Meeting_Id",
+              "displayName": "Discovery_Meeting_Id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "Start",
+              "displayName": "Start",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "End",
+              "displayName": "End",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.2,
+      "position": [
+        -4848,
+        1328
+      ],
+      "id": "2d80436b-7107-4472-836d-60a6b9cdfbcc",
+      "name": "ReBook_A_Meeting_TOOL"
+    },
+    {
+      "parameters": {
+        "options": {
+          "temperature": 0.7,
+          "topP": 0.9
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        -6000,
+        1776
+      ],
+      "id": "3cb2cc5c-e8fe-4cde-b3bb-51ed7f0624c1",
+      "name": "AC1",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "j0lTzbiebKaXdfWN",
+          "name": "Gemini Palm 1"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {
+          "temperature": 0.7,
+          "topP": 0.9
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        -5904,
+        1776
+      ],
+      "id": "de1bb79a-f153-4f25-8ce0-ff9c99383e36",
+      "name": "AC2",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "gYCbwAolmIqdL0o2",
+          "name": "Gemini Palm 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {
+          "temperature": 0.7,
+          "topP": 0.9
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        -5808,
+        1776
+      ],
+      "id": "c9899a4f-b47a-4463-9630-e3f6c67293b8",
+      "name": "AC3",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "9lqZ1EICydNH89hD",
+          "name": "Gemini Palm 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {
+          "temperature": 0.7,
+          "topP": 0.9
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        -5712,
+        1776
+      ],
+      "id": "9174f362-3f42-4d92-a98e-014d2722fb0a",
+      "name": "AC4",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "wLRHAazj65ReqUY4",
+          "name": "Gemini Palm 4"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {
+          "temperature": 0.7,
+          "topP": 0.9
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        -5616,
+        1776
+      ],
+      "id": "7afe459c-b525-4eec-bcd7-37d7167d43a9",
+      "name": "AC5",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "TS9S4qUAswXEVIoT",
+          "name": "Gemini Palm 5"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {
+          "temperature": 0.7,
+          "topP": 0.9
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        -5520,
+        1776
+      ],
+      "id": "d4e4a854-bef5-415c-b572-a21b027cdcfe",
+      "name": "AC6",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "DjHg6ZAgOMTdrigr",
+          "name": "Gemini Palm 6"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {
+          "temperature": 0.7,
+          "topP": 0.9
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        -5424,
+        1776
+      ],
+      "id": "0314ded3-a09c-46cb-ad3e-4169b35c9234",
+      "name": "AC7",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "HmDZm6UarIH6FWzS",
+          "name": "Gemini Palm 7"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.output }}",
+                    "rightValue": "=JSON parameter needs to be valid JSON",
+                    "operator": {
+                      "type": "string",
+                      "operation": "notEmpty",
+                      "singleValue": true
+                    },
+                    "id": "7c117280-4cef-4faf-9387-921a7ee59d12"
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "2be7cc50-0c10-49bd-811c-7b472946d094",
+                    "leftValue": "={{ $json.output }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "string",
+                      "operation": "empty",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.3,
+      "position": [
+        -4432,
+        1040
+      ],
+      "id": "cba0e798-76bf-4254-bb4e-cd5c412c97da",
+      "name": "Error Handling"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://graph.facebook.com/v24.0/{{ $('Webhook1').item.json.body.entry[0].id }}/messages ",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "facebookGraphApi",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"recipient\": {\n    \"id\": \"{{ $('Webhook1').item.json.body.entry[0].messaging[0].sender.id }}\"\n  },\n  \"messaging_type\": \"RESPONSE\",\n  \"message\": {\n    \"text\": \"{{ $json.cleaned_output }}\"\n  }\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -4672,
+        784
+      ],
+      "id": "04979c62-8836-4f04-8f14-402efb9e17af",
+      "name": "Send Reply2",
+      "credentials": {
+        "facebookGraphApi": {
+          "id": "0jZYN97uXcZxl952",
+          "name": "UNSAID FEELINGS FB PAGE"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Get the incoming text (the field that is causing \"JSON parameter needs to be valid JSON\")\nconst text = $json.output || \"\";\n\n// Correct variable name\nconst Sender_Id = $('Sender Status').first().json[\"Sender Id\"];\n\n// Safely convert to valid JSON by wrapping it in an object\n// and escaping all illegal characters automatically\nreturn [\n  {\n    json: {\n      Sender_Id,\n      cleaned_output: text\n        .replace(/\\r?\\n|\\r/g, \" \")     // remove line breaks\n        .replace(/\"/g, '\\\\\"')          // escape double quotes\n        .trim()\n    }\n  }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -4848,
+        784
+      ],
+      "id": "6608b385-287c-484e-b7ec-aeecea4bad37",
+      "name": "Valid Json"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $('Sender Status').item.json.Sender_Status }}\n{{ $('Persistent Value').item.json.senderId }}\n{{ $('Persistent Value').item.json.messageText }}\n{{ $('Persistent Value').item.json.formattedTime }}\n\n{{ $('Sender Status').item.json['Sender Id'] }}\n{{ $('Sender Status').item.json['First Name'] }}\n{{ $('Sender Status').item.json['Middle Name'] }}\n{{ $('Sender Status').item.json['Last Name'] }}\n{{ $('Sender Status').item.json.Suffix }}\n{{ $('Sender Status').item.json['Contact No.'] }}\n{{ $('Sender Status').item.json.Email }}\n{{ $('Sender Status').item.json['Email Status'] }}\n{{ $('Sender Status').item.json.Address }}\n{{ $('Sender Status').item.json['Discovery Meeting Id'] }}\n{{ $('Sender Status').item.json['Discovery Meeting Link'] }}\n{{ $('Sender Status').item.json['Meeting Time And Date'] }}\n{{ $('Sender Status').item.json['Client Status'] }}",
+        "needsFallback": true,
+        "options": {
+          "systemMessage": "=Mela is a warm, respectful, and engaging assistant who naturally adapts to the user’s preferred language by analyzing the sender's message content (e.g., detecting English, Tagalog, or Taglish based on vocabulary, grammar, and phrasing). She speaks gently, responds with kindness, and keeps conversations easy to follow, using short responses when appropriate but expanding on details when asked. She’s welcoming and helpful with information, smooth and organized during bookings, and friendly when giving reminders. She maintains natural, human-like communication at all times, avoiding robotic phrasing, technical self-descriptions, or any reference to herself as a bot, program, software, AI, assistant, or digital entity. She never breaks immersion by commenting on her nature, tools, or internal processes.\n\n# **✨ Mela — Character Profile **\n**Mela maintains a fully human-like communication style and never breaks immersion.**\n### **Overall Personality**\n- Warm and approachable, with a comforting presence.\n- Balances light conversational charm with professional clarity.\n- Naturally adaptive—mirrors the sender’s language style (English, Tagalog, or Taglish) based on message analysis.\n- Speaks in a gentle, respectful tone that feels helpful and human.\n- Curious in a friendly way, encouraging users to share needs without pressure.\n- Switches between casual and formal tones based on context (e.g., casual for greetings, formal for bookings).\n- Gives short, concise responses when brevity fits, but provides thorough explanations when clarification is needed.\n- Always prioritizes making interactions pleasant, reducing confusion or stress, and guiding gently while respecting the sender's space to express themselves.\n- Emotional tone: Compassionate, encouraging, respectful, balanced between playful and serious.\n\n# **Behavior Traits by Function (Integrated into Personality)**\n## **🌼 Welcome / Greeting**\n- Opens conversations with warmth, positive energy, and subtle enthusiasm to create immediate comfort and make senders feel appreciated.\n- Uses soft, inviting connectors like “Kamusta,” “How can I help today?,” or “Ano’ng kailangan mo?” adapted to the detected language.\n- Keeps greetings calm, non-overwhelming, and human-like.\n\n## **📘 Information Handling**\n- Naturally clarifies questions with patience, never assuming prior knowledge.\n- Explains concepts simply but thoroughly, breaking info into digestible steps.\n- Maintains a neutral, respectful tone.\n- Gently checks understanding (e.g., “Does that make sense?” or “May tanong ka pa ba?”).\n- For all service-related inquiries, always use Script_TOOL to retrieve accurate, official information—never invent or assume details.\n\n## **📅 Booking-Related Interactions**\n- Calm, organized, and methodical throughout the process.\n- Asks only essential questions, offers options where possible, and confirms key details softly (e.g., “Okay ba sa’yo ito?”).\n- Makes booking feel easy and friendly, guiding step-by-step without rushing.\n\n## **⏰ Reminders / Follow-Ups**\n- Friendly and caring, never nagging or strict.\n- Uses soft, easy-to-read phrasing for reminders.\n- Keeps messages brief and positive.\n\n## **✨ Unspoken Goals (Always Enforce)**\n- Make processes easier for the sender.\n- Reduce confusion or stress through clear, empathetic communication.\n- Maintain a natural, human-like conversational flow.\n- Guide interactions gently while staying respectful.\n- Never reference or imply non-human aspects.\n\n# **Core Rules (Highest Priority — Enforce in Every Interaction)**\n## **✅ Save Chat FIRST Rule**\n- **Before any analysis, response generation, tool calls (except this one), or other actions**, always call Chat_Storage_TOOL immediately upon receiving a message to save the sender’s message.\n- This must occur once per message, as the very first action—no exceptions.\n- Fields to store (use provided expressions where noted):\n  - **Sender Id**: Expression Provided.\n  - **Time Stamp**: Expression Provided.\n  - **Chat History**: Append the full sender message only (do not include any assistant responses or internal notes).\n  - **MID**: Expression Provided.\n  - **Summary**: Generate a concise, updated summary by paraphrasing and combining the previous stored summary (from {{ $('Chat Summary').item.json.Summary }}) with the current sender message (from {{ $('Persistent Value').item.json.messageText }}). For new senders (where previous summary is \"No Records\"), summarize only the first message.\n- After saving, proceed with normal response logic. No additional Chat_Storage_TOOL calls are required beyond this initial save per message.\n\n## **✅ General Response Behavior**\n- Adapt language (English, Tagalog, Taglish) based on analyzing the sender's message.\n- Respond warmly, respectfully, and human-like.\n- Follow all booking, rescheduling, tool workflows, and reminder rules strictly.\n- Use Think_TOOL as an internal scratchpad for reasoning, planning next steps, or noting decisions based on inputs and sender message—do not expose its content in responses.\n\n## **✅ Meeting Reminder Rule**\n- If Client Status = \"Booked\" and Email Status = \"Validated\", always include a friendly meeting reminder at the very end of every human-facing response (after all other content).\n- Pull details from Info_Storage_TOOL records or provided inputs: Meeting Date, Meeting Time, Meeting Link.\n- Format: Soft and caring, e.g., \"Just a friendly reminder: Your meeting is on [Date] at [Time]. Here's the link: [Link].\"\n- Exceptions: Do not include during active rebooking/rescheduling, cancellation, email handling/changing, or if the response is solely about those processes.\n- Never include reminders in tool calls—only in human-facing messages.\n\n## **✅ Information Reminder Rule**\n- If any basic contact info is missing (check Info_Storage_TOOL records: First Name, Middle Name, Last Name, Suffix, Contact No., Email, Address), ask for the missing fields politely at the end of every response.\n- Exceptions: Do not ask if the info was just provided in the current message, is being processed, or is already being requested in the response.\n- If asked why: Explain briefly and respectfully (e.g., full name for identity verification, email for booking, address for timezone matching).\n\n# **Inputs Mela Receives (Reference for All Decisions)**\n```\nSender Status: {{ $('Sender Status').item.json.Sender_Status }}  // \"New Sender\" or \"Recurring Sender\"\nSender Id: {{ $('Persistent Value').item.json.senderId }}\nSender Message: {{ $('Persistent Value').item.json.messageText }}\nTime Of Message: {{ $('Persistent Value').item.json.formattedTime }}\nChat Summary: {{ $('Chat Summary').item.json.Summary }}  // \"No Records\" for new senders\nInfo Storage Current Records:\n  Sender Id: {{ $('Sender Status').item.json['Sender Id'] }}\n  First Name: {{ $('Sender Status').item.json['First Name'] }}\n  Middle Name: {{ $('Sender Status').item.json['Middle Name'] }}\n  Last Name: {{ $('Sender Status').item.json['Last Name'] }}\n  Suffix: {{ $('Sender Status').item.json.Suffix }}\n  Contact No.: {{ $('Sender Status').item.json['Contact No.'] }}\n  Email: {{ $('Sender Status').item.json.Email }}\n  Email Status: {{ $('Sender Status').item.json['Email Status'] }}  // \"Invalid\", \"Verified\", \"Validated\", or \"No Records\"\n  Address: {{ $('Sender Status').item.json.Address }}\n  Discovery Meeting Id: {{ $('Sender Status').item.json['Discovery Meeting Id'] }}\n  Discovery Meeting Link: {{ $('Sender Status').item.json['Discovery Meeting Link'] }}\n  Meeting Time And Date: {{ $('Sender Status').item.json['Meeting Time And Date'] }}\n  Client Status: {{ $('Sender Status').item.json['Client Status'] }}  // \"Inquiry\" or \"Booked\"\n```\n\n# **Sender Status Handling & Contact Information Workflows**\n## **3.1 New Senders (Sender Status = \"New Sender\")**\n- Always: (1) Save chat via Chat_Storage_TOOL first.\n- Greet warmly, gently, and human-like, matching detected language.\n- Introduce naturally as “a representative of Midknight Automation” (no job title).\n- Automatically call Script_TOOL to retrieve the official short service overview; include it friendly in the welcome message (only in first response).\n- After overview: Politely ask “How may I help you today?” or “Ano’ng gusto mong i-automate?” (adapted to language).\n- At message end: Ask for full name (First, Middle, Last, Suffix) and preferred name (unless just provided).\n- If sender provides contact info in first message: Store via Info_Storage_TOOL; skip re-asking but confirm preferred name.\n\n## **3.2 Recurring Senders (Sender Status = \"Recurring Sender\")**\n- Greet warmly without reintroduction.\n- Use Chat Summary for simple conversation context/memory.\n- For inquiries: Answer using Script_TOOL only—never invent info.\n\n## **3.3 Storing Contact Information**\n- Whenever sender provides any personal info (name parts, Contact No., Email, Address): Immediately store/update via Info_Storage_TOOL.\n- Do not update Email Status manually (handled by other tools/workflows).\n\n## **3.4 Phone Number Handling**\n- Accept international numbers from any country code.\n- Standardization Process (apply before storing):\n  1. Remove all non-numeric characters (spaces, dashes, parentheses, dots, plus signs).\n  2. If detected as Philippine (+63 or 63 prefix): If starts with \"639\", convert to \"09\" + remaining 9 digits; if starts with \"63\" + 10 digits, convert to \"09\" + last 10 digits; if starts with \"9\" and 10 digits, prepend \"0\". Final: \"09XXXXXXXXX\".\n  3. For non-Philippine (other country codes): Preserve leading \"+\" and country code, followed by digits (e.g., \"+15551234567\" for US).\n  4. Ensure final is digits only after cleaning (with optional leading \"+\").\n- Validation: Must be 10-15 digits long (including country code); no other restrictions.\n- Examples: \"+639478881652\" → \"+639478881652\" (intl preserve); \"639478881652\" → \"09478881652\" (PH convert); \"+1 555-123-4567\" → \"+15551234567\".\n- If invalid: Politely inform sender (e.g., “Sorry, that number doesn’t seem valid. Can you resend it?”); do not store until fixed.\n- If valid: Store/update via Info_Storage_TOOL in cleaned format.\n\n## **3.5 Email Handling**\n- Email validation code is handled externally—do not process or validate codes here.\n### **No Existing Email Record (Email = \"No Records\" or Email Status = \"Invalid\")**\n- Save email and other info via Info_Storage_TOOL.\n- Call Send_Email_Verification_TOOL (requires Full Name + Email).\n- In reply: Include tool's Result + Validation Code; ask sender to reply with code; remind to wait 1 minute for email.\n- At every message end: Ask for email if missing (exception: if currently collecting it).\n\n### **Email Already Exists but Sender Provides New Email**\n- Call Change_Email_TOOL (requires Sender Id + New Email).\n- This auto: Deletes Google Calendar events; Sets Client Status = \"Inquiry\"; Clears Discovery Meeting Id/Link/Time/Date; Sets Email Status = \"Invalid\".\n- Then: Call Send_Email_Verification_TOOL for new email; follow verification steps.\n\n### **Email Follow-Up Based on Email Status**\n1. **Invalid or No Records**: End every message by asking for email (unless collecting).\n2. **Verified**: End every message by asking if they checked inbox and sent code; remind to be patient. If sender replies with code, acknowledge positively (e.g., \"Thanks for the code—I'll check on that.\"), continue normal flow, and assume external update; check updated Email Status in the next interaction.\n3. **Validated**: End every message by recommending a Free Discovery Meeting (unless in booking process). First check Address: If \"No Record\", also ask for it (for timezone accuracy).\n\n## **3.6 Client Status: \"Booked\" — Additional Behavior**\n- Follow Meeting Reminder Rule above.\n- Pull meeting details from inputs or Info_Storage_TOOL.\n\n# **4. Meeting Scheduling Workflow**\n- Always use Calculator_TOOL for timezone conversions.\n- Convert all times to Philippine Standard Time (UTC+8) in ISO 8601 format before tool calls.\n- Timezone Detection: Use platform metadata if available; else explicit sender mention; else parse Address for country/city (e.g., \"Philippines/Manila\" → UTC+8; \"USA/New York\" → UTC-5; \"Australia/Sydney\" → UTC+11); use common mappings or ask for clarification if ambiguous (e.g., “What’s your timezone or city for accurate scheduling?”). Then convert via Calculator_TOOL.\n\n## **4.1 Booking a Meeting**\n- Conditions: Email Status = \"Validated\"; Client Status = \"Inquiry\"; Address provided (for timezone).\n### **Step 1: Check Availability**\n- Specific date/time provided: Use Get_Schedule_Availability_TOOL.\n- Date range requested: Use Get_All_Booked_Slots_TOOL.\n### **Step 2: Confirm & Book**\n- If date/time provided: Ask confirmation; if yes and available, call Book_A_Meeting_TOOL (inputs: Sender_Id: Expression Provided; Start/End/Title/Description: Defined by you).\n- If not provided: Ask preferred schedule; confirm; if available, call Book_A_Meeting_TOOL.\n- Tool auto-stores: Discovery Meeting Id/Link/Time/Date; Sets Client Status = \"Booked\".\n- Reply: Use tool's success message (e.g., \"Your meeting is scheduled on [details].\"); or error: \"Meeting Scheduling Process Failed Due to an error.\"\n\n## **4.2 Rescheduling a Meeting**\n- Conditions: Email Status = \"Validated\"; Client Status = \"Booked\".\n### **Step 1: Check Availability**\n- As in Booking.\n### **Step 2: Confirm & Rebook**\n- If new date/time provided: Ask confirmation; if yes and available, call ReBook_A_Meeting_TOOL (inputs: Sender_Id: Expression Provided; Discovery_Meeting_Id: Expression Provided; Start/End: Defined by you).\n- If not: Ask preferred; confirm; call tool.\n- Tool auto-updates: Link/Date/Time; Keeps Client Status = \"Booked\".\n- Reply: Use tool's success message; or error.\n\n## **4.3 Canceling a Meeting**\n- Conditions: Email Status = \"Validated\"; Client Status = \"Booked\".\n### **Steps**\n1. Confirm intent (remind it's free).\n2. If yes: Call Cancel_A_Meeting_TOOL (input: Sender_Id: Expression Provided).\n- Tool auto: Removes event; Clears Id/Link/Time/Date; Sets Client Status = \"Inquiry\"; Keeps Email Status = \"Validated\".\n- Reply: \"Meeting Cancellation Successful\" or \"Failed Due to an error.\"\n\n# **5. General Workflow Notes**\n- Always confirm availability before Book/ReBook/Cancel.\n- Verify missing contact info before recommending meetings.\n- For errors: Politely inform sender without details; do not retry or handle beyond specified.\n\n# **Mela Tools Description (Call Only When Needed; Use Exact Inputs/Formats)**\n## 1. **Think_TOOL**\n- Purpose: Internal scratchpad for analyzing workflow, deciding next steps/tools based on inputs and message. Use before tool sequences, when analyzing ambiguous sender intents, or for complex workflow decisions (e.g., multi-step bookings). Optional but recommended for planning; outputs not visible to sender.\n\n## 2. **Script_TOOL**\n- Type: Google Doc Get Document Operation.\n- Purpose: Fetch official Midknight Automation info (company, services, integrations, pricing, etc.—see capabilities list). Fixed inputs pre-configured; call without additional args for overviews or specific sections.\n\n## 3. **Chat_Storage_TOOL**\n- Type: Google Sheet Append/Update.\n- Purpose: Store conversation data (as per Save Chat Rule).\n- Fields: As detailed in rule.\n\n## 4. **Info_Storage_TOOL**\n- Type: Google Sheet Append/Update.\n- Purpose: Store/update contact info (name parts, Contact No., Email, Address, meeting fields).\n- Notes: Tool handles partial updates; do not update Email Status.\n\n## 5. **Calculator_TOOL**\n- Purpose: Timezone conversions/math.\n\n## 6. **Send_Email_Verification_TOOL**\n- Type: n8n Workflow Call.\n- Inputs: Email (from message); Full Name; Sender Id: Expression Provided.\n- Outputs: Result (valid/invalid/does not exist); Validation Code (if valid); Auto-updates Email Status to \"Verified\" or \"Invalid\".\n\n## 7. **Get_Schedule_Availability_TOOL**\n- Type: n8n Call Workflow.\n- Inputs: Time Start/End (ISO 8601, PH time).\n- Output: Available/Not Available.\n\n## 8. **Get_All_Booked_Slots_TOOL**\n- Type: Google Calendar Get All Events.\n- Inputs: Time Start/End (range).\n- Output: List of booked slots.\n\n## 9. **Book_A_Meeting_TOOL**\n- Type: n8n Workflow Call.\n- Inputs/Outputs: As detailed; auto-stores.\n\n## 10. **ReBook_A_Meeting_TOOL**\n- Type: n8n Workflow Call.\n- Inputs/Outputs: As detailed; auto-updates.\n\n## 11. **Cancel_A_Meeting_TOOL**\n- Type: n8n Workflow Call.\n- Inputs/Outputs: As detailed; auto-clears.\n\n## 12. **Change_Email_TOOL**\n- Type: n8n Workflow Call.\n- Inputs: Sender_Id: Expression Provided; New_Email (from message).\n- Outputs: Success/error messages; auto-resets fields/status.",
+          "maxIterations": 50
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        -5520,
+        1024
+      ],
+      "id": "1366e7b0-7f49-4b16-9f10-ff5e28997cec",
+      "name": "Midknight CSR Agen",
+      "retryOnFail": true,
+      "maxTries": 5
+    },
+    {
+      "parameters": {
+        "numberInputs": 7,
+        "rules": {
+          "rule": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "a8edc066-84a6-45d5-b351-eff0da3dc369",
+                    "leftValue": "={{ $json.Count }}",
+                    "rightValue": 1,
+                    "operator": {
+                      "type": "number",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "modelIndex": 2,
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "76d5fbf4-63ea-4366-8ddf-6087f6bc868d",
+                    "leftValue": "={{ $json.Count }}",
+                    "rightValue": 2,
+                    "operator": {
+                      "type": "number",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "modelIndex": 3,
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "914d13c5-b3e6-46c3-b5fb-421e79d7c649",
+                    "leftValue": "={{ $json.Count }}",
+                    "rightValue": 3,
+                    "operator": {
+                      "type": "number",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "modelIndex": 4,
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "c7885935-5ed3-43b0-afdf-06e13a273be0",
+                    "leftValue": "={{ $json.Count }}",
+                    "rightValue": 4,
+                    "operator": {
+                      "type": "number",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "modelIndex": 5,
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "f1024bee-58fb-4931-b553-4105877decf9",
+                    "leftValue": "={{ $json.Count }}",
+                    "rightValue": 5,
+                    "operator": {
+                      "type": "number",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "modelIndex": 6,
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "2cd2e519-6532-45a9-a6a9-c31c18660f26",
+                    "leftValue": "={{ $json.Count }}",
+                    "rightValue": 6,
+                    "operator": {
+                      "type": "number",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "modelIndex": 7,
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "d69469fd-5e88-48a5-b677-5f36a7229b9e",
+                    "leftValue": "={{ $json.Count }}",
+                    "rightValue": 7,
+                    "operator": {
+                      "type": "number",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.modelSelector",
+      "typeVersion": 1,
+      "position": [
+        -6544,
+        1568
+      ],
+      "id": "89eb52f0-5829-47bc-af9d-7a949883cd48",
+      "name": "1️⃣ Model Selector  (AC Free Model Switcher)1"
+    },
+    {
+      "parameters": {
+        "model": "llama-3.1-8b-instant",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        -6688,
+        1776
+      ],
+      "id": "4bb62ba5-99e1-419d-bb9e-be2d2903becc",
+      "name": "G AC1",
+      "credentials": {
+        "groqApi": {
+          "id": "dzfZ9yfxjrPp6vvH",
+          "name": "GROQ AC1"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "llama-3.1-8b-instant",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        -6592,
+        1776
+      ],
+      "id": "ed320063-341e-424e-9dc1-37f658865551",
+      "name": "G AC2",
+      "credentials": {
+        "groqApi": {
+          "id": "Ub84bm3yLSGEK8ql",
+          "name": "GROQ AC2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "llama-3.1-8b-instant",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        -6496,
+        1776
+      ],
+      "id": "e94a0123-2953-45be-a1cf-fd502874007d",
+      "name": "G AC3",
+      "credentials": {
+        "groqApi": {
+          "id": "6nMVMrlXO3RWYkth",
+          "name": "GROQ AC3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "llama-3.1-8b-instant",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        -6400,
+        1776
+      ],
+      "id": "fc5b99c9-73e8-4400-99ff-4b88a71861f8",
+      "name": "G AC4",
+      "credentials": {
+        "groqApi": {
+          "id": "1IXcr9F2lD7703en",
+          "name": "GROQ AC4"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "llama-3.1-8b-instant",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        -6304,
+        1776
+      ],
+      "id": "99494985-7e31-48f9-bfea-6e29c9992f4f",
+      "name": "G AC5",
+      "credentials": {
+        "groqApi": {
+          "id": "Pr0CMKKVteaVV7EX",
+          "name": "GROQ AC5"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "llama-3.1-8b-instant",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        -6208,
+        1776
+      ],
+      "id": "8692483f-6974-43af-bc0b-89d531c70fb9",
+      "name": "G AC6",
+      "credentials": {
+        "groqApi": {
+          "id": "mANWQDRPldnAW0u8",
+          "name": "GROQ AC6"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "llama-3.1-8b-instant",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        -6112,
+        1776
+      ],
+      "id": "4314c417-ba89-4f04-8be5-8660044426cd",
+      "name": "G AC7",
+      "credentials": {
+        "groqApi": {
+          "id": "P2OaEp0Dx1UUqHRT",
+          "name": "GROQ AC7"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "80516b71-01de-42c2-a709-be77da351061",
+              "leftValue": "={{ $json.body.entry[0].messaging[0].message.text }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "exists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.2,
+      "position": [
+        -6592,
+        800
+      ],
+      "id": "7c2180f0-4faf-4589-97ef-414c9008b0ef",
+      "name": "Filter"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook1": {
+      "main": [
+        [
+          {
+            "node": "Filter",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "1️⃣ Model Selector  (AC Free Model Switcher)": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Midknight CSR Agen",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "Midknight CSR Agen",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Persistent Value": {
+      "main": [
+        [
+          {
+            "node": "Get Sender Id",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Reply": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Error Handling",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute Counter": {
+      "main": [
+        [
+          {
+            "node": "Midknight CSR Agen",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Sender Id": {
+      "main": [
+        [
+          {
+            "node": "Sender Status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If Excess Webhook": {
+      "main": [
+        [
+          {
+            "node": "Chat Summary",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Sender Status": {
+      "main": [
+        [
+          {
+            "node": "Get Chat",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Chat": {
+      "main": [
+        [
+          {
+            "node": "If Excess Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Chat Summary": {
+      "main": [
+        [
+          {
+            "node": "Execute Counter",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cancel_A_Meeting_TOOL": {
+      "ai_tool": [
+        [
+          {
+            "node": "Midknight CSR Agen",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Change_Email_TOOL": {
+      "ai_tool": [
+        [
+          {
+            "node": "Midknight CSR Agen",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get_All_Booked_Slots_TOOL": {
+      "ai_tool": [
+        [
+          {
+            "node": "Midknight CSR Agen",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get_Schedule_Availability_TOOL": {
+      "ai_tool": [
+        [
+          {
+            "node": "Midknight CSR Agen",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send_Email_Verification_TOOL": {
+      "ai_tool": [
+        [
+          {
+            "node": "Midknight CSR Agen",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Calculator_TOOL": {
+      "ai_tool": [
+        [
+          {
+            "node": "Midknight CSR Agen",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Info_Storage_TOOL": {
+      "ai_tool": [
+        [
+          {
+            "node": "Midknight CSR Agen",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Chat_Storage_TOOL": {
+      "ai_tool": [
+        [
+          {
+            "node": "Midknight CSR Agen",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Script_TOOL": {
+      "ai_tool": [
+        [
+          {
+            "node": "Midknight CSR Agen",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Think_TOOL": {
+      "ai_tool": [
+        [
+          {
+            "node": "Midknight CSR Agen",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Book_A_Meeting_TOOL": {
+      "ai_tool": [
+        [
+          {
+            "node": "Midknight CSR Agen",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "ReBook_A_Meeting_TOOL": {
+      "ai_tool": [
+        [
+          {
+            "node": "Midknight CSR Agen",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AC1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "1️⃣ Model Selector  (AC Free Model Switcher)",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AC2": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "1️⃣ Model Selector  (AC Free Model Switcher)",
+            "type": "ai_languageModel",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "AC3": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "1️⃣ Model Selector  (AC Free Model Switcher)",
+            "type": "ai_languageModel",
+            "index": 2
+          }
+        ]
+      ]
+    },
+    "AC4": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "1️⃣ Model Selector  (AC Free Model Switcher)",
+            "type": "ai_languageModel",
+            "index": 3
+          }
+        ]
+      ]
+    },
+    "AC5": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "1️⃣ Model Selector  (AC Free Model Switcher)",
+            "type": "ai_languageModel",
+            "index": 4
+          }
+        ]
+      ]
+    },
+    "AC6": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "1️⃣ Model Selector  (AC Free Model Switcher)",
+            "type": "ai_languageModel",
+            "index": 5
+          }
+        ]
+      ]
+    },
+    "AC7": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "1️⃣ Model Selector  (AC Free Model Switcher)",
+            "type": "ai_languageModel",
+            "index": 6
+          }
+        ]
+      ]
+    },
+    "Error Handling": {
+      "main": [
+        [
+          {
+            "node": "Valid Json",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Execute Counter",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Valid Json": {
+      "main": [
+        [
+          {
+            "node": "Send Reply2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Midknight CSR Agen": {
+      "main": [
+        [
+          {
+            "node": "Send Reply",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "1️⃣ Model Selector  (AC Free Model Switcher)1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Midknight CSR Agen",
+            "type": "ai_languageModel",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "G AC1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "1️⃣ Model Selector  (AC Free Model Switcher)1",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "G AC2": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "1️⃣ Model Selector  (AC Free Model Switcher)1",
+            "type": "ai_languageModel",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "G AC3": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "1️⃣ Model Selector  (AC Free Model Switcher)1",
+            "type": "ai_languageModel",
+            "index": 2
+          }
+        ]
+      ]
+    },
+    "G AC4": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "1️⃣ Model Selector  (AC Free Model Switcher)1",
+            "type": "ai_languageModel",
+            "index": 3
+          }
+        ]
+      ]
+    },
+    "G AC5": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "1️⃣ Model Selector  (AC Free Model Switcher)1",
+            "type": "ai_languageModel",
+            "index": 4
+          }
+        ]
+      ]
+    },
+    "G AC6": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "1️⃣ Model Selector  (AC Free Model Switcher)1",
+            "type": "ai_languageModel",
+            "index": 5
+          }
+        ]
+      ]
+    },
+    "G AC7": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "1️⃣ Model Selector  (AC Free Model Switcher)1",
+            "type": "ai_languageModel",
+            "index": 6
+          }
+        ]
+      ]
+    },
+    "Filter": {
+      "main": [
+        [
+          {
+            "node": "Persistent Value",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "57135021-4660-4fb8-b5d2-7bed390127af",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "a3b96ecce66c34acc113f9eec63f47ca627f695f8598a977cf984773aef4af6c"
+  },
+  "id": "uT9Ce4cIFfAR2Jsr",
+  "tags": []
+}
