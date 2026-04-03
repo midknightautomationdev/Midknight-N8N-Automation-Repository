@@ -254,3 +254,22 @@ I'm open to projects and collaborations.
 
 ---
 
+## 🛒 Get the Full Automation
+
+Want to skip the manual setup and get everything ready-to-use?
+
+You can get the **complete automation workflow**, fully configured and ready to deploy:
+
+👉 **Store:** [https://midknightdigistore.gumroad.com/](https://midknightdigistore.gumroad.com/)
+
+---
+
+### ⚡ Why Get the Full Version?
+
+* ✅ No need to follow long tutorials
+* ✅ Fully configured workflows
+* ✅ Ready-to-use integrations
+* ✅ Save hours of setup time
+* ✅ Plug-and-play automation
+
+---
