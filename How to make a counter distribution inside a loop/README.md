@@ -130,19 +130,23 @@ The workflow consists of the following nodes:
 
 ---
 
-## 🎥 Full Walkthrough
+## For more info refer to these clickable links below
 
-For a complete guide and demo, check out My YouTube channel:
+---
 
-👉 [https://www.youtube.com/@MidknightCodesNAutomations](https://www.youtube.com/@MidknightCodesNAutomations)
+## 🎥 Full Walkthroughs
+
+For more info you can check out My YouTube channel:
+
+👉 [Youtube-@MidknightCodesNAutomations](https://www.youtube.com/@MidknightCodesNAutomations)
 
 ---
 
 ## 🔗 Connect With Me
 
-* **LinkedIn:** [https://www.linkedin.com/in/joe-angarrovillojr/](https://www.linkedin.com/in/joe-angarrovillojr/)
-* **Facebook (Business):** [https://www.facebook.com/joeangarrovillojr/](https://www.facebook.com/joeangarrovillojr/)
-* **Creator Profile:** [https://www.facebook.com/midknightuzer/](https://www.facebook.com/midknightuzer/)
+* **LinkedIn:** [LN-Proffessional Joe-an Garrovillo](https://www.linkedin.com/in/joe-angarrovillojr/)
+* **Facebook (Business):** [FB-Business Joe-an Garrovillo](https://www.facebook.com/joeangarrovillojr/)
+* **Creator Profile:** [FB-Creator MidknightUzer](https://www.facebook.com/midknightuzer/)
 
 ---
 
@@ -150,7 +154,8 @@ For a complete guide and demo, check out My YouTube channel:
 
 For questions, collaborations, or automation-related business inquiries, feel free to reach out:
 
-* 📧 **Email:** [midknightautomation@gmail.com](mailto:midknightautomation@gmail.com)
+* 📧 **Brand-Email:** [midknightautomation@gmail.com](mailto:midknightautomation@gmail.com)
+* 📧 **Business-Email:** [joeangarrovillojr@gmail.com](mailto:joeangarrovillojr@gmail.com)
 
 ---
 
@@ -172,7 +177,7 @@ Want to skip the manual setup and get everything ready-to-use?
 
 You can get the **complete automation workflow**, fully configured and ready to deploy:
 
-👉 **Store:** [https://midknightdigistore.gumroad.com/](https://midknightdigistore.gumroad.com/)
+👉 **Store:** [Midknight-Digistore](https://midknightdigistore.gumroad.com/)
 
 ---
 
@@ -185,3 +190,4 @@ You can get the **complete automation workflow**, fully configured and ready to 
 * ✅ Plug-and-play automation
 
 ---
+
